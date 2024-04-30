@@ -54,6 +54,8 @@ updates:
           - 'flowbite'
           - 'less'
           - '@qwikest/icons'
+          - '@vanilla-extract/*'
+          - 'styled-*'
       typescript-core:
         patterns:
           - 'typescript'
