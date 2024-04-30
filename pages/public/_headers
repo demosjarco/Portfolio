@@ -13,3 +13,7 @@
 https://:project.pages.dev/build/*
   ! Cache-Control
   Cache-Control: public, max-age=31536000, s-maxage=31536000, immutable
+
+https://demosjarco.dev/build/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, s-maxage=31536000, immutable
