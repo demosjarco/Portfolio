@@ -1,7 +1,7 @@
 import { component$, Slot, useContextProvider, useSignal } from '@builder.io/qwik';
 import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
-import { FocusingContext, PowerStateContext } from '../contexts';
-import { Focusing, PowerState } from '../contexts/types';
+import { FocusingContext, IconStateContext, PowerStateContext } from '../contexts';
+import { defaultFocus, defaultIconState, defaultState } from '../contexts/signals';
 
 export const head: DocumentHead = {
 	title: 'TODO',
@@ -36,8 +36,21 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 
 export default component$(() => {
 	// Setup contexts
-	useContextProvider(FocusingContext, useSignal(Focusing.window));
-	useContextProvider(PowerStateContext, useSignal(PowerState.start));
+	/**
+	 * @todo apps
+	 */
+	/**
+	 * @todo next app id
+	 */
+	/**
+	 * @todo next z index
+	 */
+	useContextProvider(FocusingContext, useSignal(defaultFocus));
+	useContextProvider(IconStateContext, useSignal(defaultIconState));
+	/**
+	 * @todo selecting
+	 */
+	useContextProvider(PowerStateContext, useSignal(defaultState));
 
 	// UI
 	return <Slot />;
