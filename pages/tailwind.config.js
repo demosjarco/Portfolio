@@ -7,6 +7,10 @@ module.exports = {
 				xxs: '320px',
 			},
 		},
+		fontFamily: {
+			sans: ['Tahoma', 'Noto Sans', 'ui-sans-serif'],
+			mono: ['Lucida Console', 'ui-monospace'],
+		},
 	},
 	plugins: [require('flowbite/plugin')],
 };
