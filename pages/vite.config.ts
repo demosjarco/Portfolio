@@ -13,7 +13,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
 	return {
 		plugins: [
 			qwikCity(),
-			qwikVite(),
+			qwikVite({
+				devTools: {
+					clickToSource: false,
+				},
+			}),
 			tsconfigPaths(),
 			nodeResolve({
 				browser: true,
