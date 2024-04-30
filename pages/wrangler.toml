@@ -2,3 +2,9 @@ name = "demosjarco-portfolio"
 pages_build_output_dir = "pages/dist"
 compatibility_date = "2024-04-19"
 compatibility_flags = ["nodejs_compat", "brotli_content_encoding"]
+
+
+[dev]
+local_protocol = "http"
+ip = "localhost"
+port = 48054
