@@ -1,0 +1,9 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"background_color": "#1e3664",
+	"categories": ["productivity"],
+	"display": "standalone",
+	"orientation": "any",
+	"start_url": ".",
+	"theme_color": "#388E3C"
+}

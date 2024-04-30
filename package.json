@@ -1,0 +1,25 @@
+{
+	"scripts": {
+		"fmt": "prettier --write .",
+		"fmt.check": "prettier --check ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/demosjarco/Portfolio.git"
+	},
+	"license": "Apache-2.0",
+	"private": true,
+	"bugs": {
+		"url": "https://github.com/demosjarco/Portfolio/issues"
+	},
+	"homepage": "https://github.com/demosjarco/Portfolio#readme",
+	"workspaces": [
+		"pages"
+	],
+	"devDependencies": {
+		"@demosjarco/prettier-config": "^1.0.1",
+		"prettier": "^3.2.5",
+		"typescript": "^5.4.5",
+		"wrangler": "^3.52.0"
+	}
+}
