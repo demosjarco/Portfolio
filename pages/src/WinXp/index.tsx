@@ -4,7 +4,7 @@ import { PowerStateContext } from '../contexts';
 import { PowerState } from '../contexts/types';
 import IconsContainer from './Icons/IconsContainer';
 
-export default component$<{ icons }>(({ icons }) => {
+export default component$(() => {
 	const power = useContext(PowerStateContext);
 
 	useTask$(({ track }) => {
