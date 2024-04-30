@@ -1,5 +1,7 @@
-import { component$, Slot } from '@builder.io/qwik';
+import { component$, Slot, useContextProvider, useSignal } from '@builder.io/qwik';
 import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
+import { FocusingContext, PowerStateContext } from '../contexts';
+import { Focusing, PowerState } from '../contexts/types';
 
 export const head: DocumentHead = {
 	title: 'TODO',
@@ -34,6 +36,8 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 
 export default component$(() => {
 	// Setup contexts
+	useContextProvider(FocusingContext, useSignal(Focusing.window));
+	useContextProvider(PowerStateContext, useSignal(PowerState.start));
 
 	// UI
 	return <Slot />;
