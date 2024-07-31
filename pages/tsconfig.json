@@ -11,6 +11,5 @@
 		"inlineSourceMap": true,
 		"outDir": "tmp"
 	},
-	"files": ["./.eslintrc.cjs"],
 	"include": ["src", "adapters", "./*.d.ts", "./*.config.ts"]
 }
