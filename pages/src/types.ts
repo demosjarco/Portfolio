@@ -2,8 +2,10 @@ export interface EnvVars extends Bindings, Secrets, Partial<PagesEnvironmentvari
 	NODE_ENV: 'production' | 'development';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface Secrets {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface Bindings {}
 
 interface PagesEnvironmentvariables {
