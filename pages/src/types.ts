@@ -1,6 +1,8 @@
-export interface EnvVars extends Bindings, Partial<PagesEnvironmentvariables>, Record<string, any> {
+export interface EnvVars extends Bindings, Secrets, Partial<PagesEnvironmentvariables>, Record<string, any> {
 	NODE_ENV: 'production' | 'development';
 }
+
+interface Secrets {}
 
 interface Bindings {}
 
