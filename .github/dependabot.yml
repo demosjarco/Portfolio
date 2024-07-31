@@ -62,8 +62,6 @@ updates:
           - 'less'
           - '@qwikest/icons'
           - '@fontsource/*'
-          - '@vanilla-extract/*'
-          - 'styled-*'
       typescript-core:
         patterns:
           - 'typescript'
