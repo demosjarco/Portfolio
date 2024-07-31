@@ -7,10 +7,10 @@
 		"paths": {
 			"~/*": ["./src/*"]
 		},
-		"types": ["vite/client"],
+		"types": ["@cloudflare/workers-types/experimental", "vite/client"],
 		"inlineSourceMap": true,
 		"outDir": "tmp"
 	},
 	"files": ["./.eslintrc.cjs"],
-	"include": ["src", "./*.d.ts", "./*.config.ts"]
+	"include": ["src", "adapters", "./*.d.ts", "./*.config.ts"]
 }
