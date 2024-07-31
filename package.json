@@ -1,7 +1,11 @@
 {
 	"scripts": {
-		"fmt": "prettier --write .",
-		"fmt.check": "prettier --check ."
+		"fmt": "prettier --check .",
+		"fmt:fix": "prettier --write .",
+		"lint": "eslint \"**/*.ts*\"",
+		"lint:fix": "npm run lint -- --fix",
+		"preclean": "npx -y rimraf@latest --glob ./**/.wrangler",
+		"clean": "npm -w pages run clean"
 	},
 	"repository": {
 		"type": "git",

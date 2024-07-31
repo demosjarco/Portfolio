@@ -3,6 +3,8 @@
 	"name": "pages",
 	"scripts": {
 		"build": "qwik build",
+		"prebuild:pages": "npm ci --include-workspace-root --workspace pages --include dev",
+		"build:pages": "npm run build",
 		"build.client": "vite build",
 		"build.preview": "vite build --ssr src/entry.preview.tsx",
 		"build.server": "vite build -c adapters/static/vite.config.ts",
