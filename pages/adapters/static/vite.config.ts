@@ -6,11 +6,11 @@ import baseConfig from '../../vite.config';
 export default extendConfig(baseConfig, (): UserConfig => {
 	return {
 		build: {
+			ssr: true,
+			ssrManifest: true,
 			rollupOptions: {
 				input: ['@qwik-city-plan'],
 			},
-			ssrManifest: true,
-			ssr: true,
 		},
 		plugins: [
 			staticAdapter({
