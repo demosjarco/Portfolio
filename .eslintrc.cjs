@@ -29,7 +29,7 @@ module.exports = {
 		'@typescript-eslint/no-namespace': 'off',
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-this-alias': 'off',
-		'@typescript-eslint/ban-types': 'off',
+		'@typescript-eslint/no-empty-object-type': ['warn', { allowInterfaces: 'with-single-extends' }],
 		'@typescript-eslint/ban-ts-comment': 'off',
 		'prefer-spread': 'off',
 		'no-case-declarations': 'off',
