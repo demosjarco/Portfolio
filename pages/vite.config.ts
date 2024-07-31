@@ -2,7 +2,7 @@ import { qwikCity } from '@builder.io/qwik-city/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { vanillaExtractPlugin } from 'styled-vanilla-extract/vite';
-import { defineConfig, type UserConfig } from 'vite';
+import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import type { EnvVars } from './src/types';
 
@@ -10,7 +10,7 @@ import type { EnvVars } from './src/types';
 const cloudflareNodeRuntimes: `node:${string}`[] = ['node:assert', 'node:async_hooks', 'node:buffer', 'node:crypto', 'node:diagnostics_channel', 'node:events', 'node:path', 'node:process', 'node:stream', 'node:string_decoder', 'node:util'];
 const cloudflareRuntimes: `cloudflare:${string}`[] = ['cloudflare:email'];
 
-export default defineConfig((): UserConfig => {
+export default defineConfig(() => {
 	return {
 		plugins: [
 			qwikCity(),
