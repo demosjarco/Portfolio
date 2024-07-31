@@ -34,9 +34,6 @@ updates:
       interval: daily
     open-pull-requests-limit: 999
     ignore:
-      # Match lts/*
-      - dependency-name: '@types/node'
-        versions: '>=21.0.0'
       # Currently not supported by qwik
       - dependency-name: 'eslint'
         versions: '>=9.0.0'
