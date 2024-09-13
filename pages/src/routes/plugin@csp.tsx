@@ -5,7 +5,11 @@ import { runningLocally } from '../extras';
 
 class CSPGenerator {
 	private directives: Record<string, string> = {};
-	private _nonce = randomBytes(128 / 8).toString('hex');
+	/**
+	 * bits / 8 = bytes
+	 * @link https://w3c.github.io/webappsec-csp/#security-nonces
+	 */
+	private _nonce = randomBytes(256 / 8).toString('base64url');
 
 	constructor() {
 		this.setupCSP();
