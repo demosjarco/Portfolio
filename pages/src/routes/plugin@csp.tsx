@@ -244,8 +244,8 @@ class CSPGenerator {
 	) {
 		this.addSource('form-action', config.all, config.none, config.self, undefined, undefined, config.domains);
 	}
-	private addUpgradeInsecureRequests(enabled: boolean = true) {
-		if (enabled) this.directives['upgrade-insecure-requests'] = '';
+	private addUpgradeInsecureRequests() {
+		this.directives['upgrade-insecure-requests'] = '';
 	}
 	private addBlockAllMixedContent() {
 		this.directives['block-all-mixed-content'] = '';
