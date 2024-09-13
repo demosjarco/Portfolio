@@ -1,8 +1,12 @@
-name: Auto Dependabot
-on: pull_request
+name: Dependabot Addons
+on:
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
-  enhance:
+  label:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     permissions:
@@ -12,8 +16,8 @@ jobs:
     steps:
       - uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
         with:
+          egress-policy: audit
           disable-sudo: true
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
       - uses: dependabot/fetch-metadata@dbb049abf0d677abbd7f7eee0375145b417fdd34 # v2.2.0
         id: dependabot-metadata
       - run: echo "SEMVER_UPDATE=$(echo "${{ steps.dependabot-metadata.outputs.update-type }}" | cut -d':' -f2)" >> "$GITHUB_OUTPUT"
@@ -21,24 +25,16 @@ jobs:
       - run: gh pr edit "${{ github.event.pull_request.html_url }}" --add-label "${{ steps.dependabot-metadata-update-type.outputs.SEMVER_UPDATE }}"
         env:
           GH_TOKEN: ${{ github.token }}
-  automate:
+  review:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
     permissions:
-      contents: write
       pull-requests: write
     steps:
       - uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
         with:
           disable-sudo: true
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-      - uses: dependabot/fetch-metadata@dbb049abf0d677abbd7f7eee0375145b417fdd34 # v2.2.0
-        id: dependabot-metadata
+          egress-policy: audit
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - run: gh pr checkout "${{ github.event.pull_request.html_url }}"
-        env:
-          GH_TOKEN: ${{ github.token }}
-      - run: gh pr review --approve "${{ github.event.pull_request.html_url }}"
-        if: steps.dependabot-metadata.outputs.dependency-group == 'typescript-types' || steps.dependabot-metadata.outputs.dependency-group == 'code-management'
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - uses: actions/dependency-review-action@5a2ce3f5b92ee19cbb1541a4984c76d921601d7c # v4.3.4
+        with:
+          comment-summary-in-pr: always
