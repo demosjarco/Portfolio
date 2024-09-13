@@ -21,6 +21,7 @@ class CSPGenerator {
 
 	private validateDomain(domain: string): boolean {
 		let parsed: URL;
+		// Temporarily remove wildcards for validation
 		if (domain.startsWith('https://*.')) {
 			parsed = new URL(domain.replace('*.', ''));
 		} else {
