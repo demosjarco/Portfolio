@@ -35,7 +35,7 @@ class CSPGenerator {
 		const flagsToAdd: string[] = [];
 		const domainsToAdd: Set<string> = new Set();
 
-		if (all) flagsToAdd.push('*');
+		if (all) flagsToAdd.push('https:');
 		if (none) flagsToAdd.push("'none'");
 		if (self) flagsToAdd.push("'self'");
 		if (blob) flagsToAdd.push('blob:');
