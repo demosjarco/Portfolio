@@ -38,8 +38,12 @@ updates:
       - dependency-name: 'eslint'
         versions: '>=9.0.0'
     groups:
+      internal:
+        patterns:
+          - '@demosjarco/*'
       cloudflare:
         patterns:
+          - 'cloudflare'
           - '@cloudflare/*'
           - 'wrangler'
         exclude-patterns:
