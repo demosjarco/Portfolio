@@ -35,4 +35,5 @@ const PagesOnlyLoading = component$(() => {
 	if (!isLive.value) {
 		return <script src="https://demosjarco.dev/cdn-cgi/zaraz/i.js" referrerPolicy="origin"></script>;
 	}
+	return undefined;
 });
