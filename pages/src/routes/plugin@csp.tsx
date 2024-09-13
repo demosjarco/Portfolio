@@ -28,7 +28,7 @@ class CSPGenerator {
 			parsed = new URL(domain);
 		}
 
-		return parsed.protocol === 'https:' && parsed.hostname.length > 0;
+		return ['https:', 'wss:'].includes(parsed.protocol) && parsed.hostname.length > 0;
 	}
 
 	private addSource(directive: string, all: boolean = false, none: boolean = false, self: boolean = false, data: boolean = false, blob: boolean = false, domains: string[] = [], unsafeInline: boolean = false, unsafeEval: boolean = false, nonce: boolean = false, strictDynamic: boolean = false, unsafeHashes: boolean = false): void {
