@@ -15,7 +15,7 @@ class CSPGenerator {
 		this.setupCSP();
 	}
 
-	public get nonce() {
+	public get nonce(): Readonly<string> {
 		return this._nonce;
 	}
 
