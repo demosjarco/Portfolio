@@ -265,6 +265,5 @@ export const onRequest: RequestHandler = ({ platform, request, sharedMap, header
 
 	const csp = new CSPGenerator();
 	sharedMap.set('@nonce', csp.nonce);
-
 	headers.set('Content-Security-Policy', csp.generateCSP());
 };
