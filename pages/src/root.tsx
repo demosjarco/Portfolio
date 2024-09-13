@@ -1,5 +1,5 @@
-import { component$, useServerData, useVisibleTask$ } from '@builder.io/qwik';
-import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
+import { component$, useComputed$, useServerData, useVisibleTask$ } from '@builder.io/qwik';
+import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister, useLocation } from '@builder.io/qwik-city';
 import { initFlowbite } from 'flowbite';
 import { RouterHead } from './components/router-head/router-head';
 
@@ -22,7 +22,17 @@ export default component$(() => {
 			<body lang="en">
 				<RouterOutlet />
 				<ServiceWorkerRegister nonce={nonce} />
+				<PagesOnlyLoading />
 			</body>
 		</QwikCityProvider>
 	);
+});
+
+const PagesOnlyLoading = component$(() => {
+	const loc = useLocation();
+	const isLive = useComputed$(() => loc.url.hostname.endsWith('demosjarco.dev'));
+
+	if (!isLive.value) {
+		return <script src="https://demosjarco.dev/cdn-cgi/zaraz/i.js" referrerPolicy="origin"></script>;
+	}
 });
