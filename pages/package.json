@@ -17,7 +17,7 @@
 		"preview": "qwik build preview && vite preview --open",
 		"preview:lhci": "qwik build preview && vite preview --port 8080",
 		"clean": "npx -y rimraf@latest --glob ./**/.wrangler ./dist ./server ./tmp",
-		"start": "wrangler pages dev -- vite --mode ssr",
+		"start": "vite --mode ssr --open",
 		"qwik": "qwik"
 	},
 	"repository": {
