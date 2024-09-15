@@ -34,11 +34,11 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [48054],
+	"forwardPorts": [5173],
 	"portsAttributes": {
-		"48054": {
+		"5173": {
 			"elevateIfNeeded": true,
-			"label": "Pages",
+			"label": "Vite",
 			"onAutoForward": "notify",
 			"protocol": "http"
 		}
