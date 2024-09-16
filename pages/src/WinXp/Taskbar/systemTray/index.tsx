@@ -27,7 +27,8 @@ export default component$(() => {
 				'box-shadow': 'inset 1px 0 1px #18bbff',
 			}}>
 			<div class="my-auto flex">
-				<span ref={clockRef} class="my-auto text-sm font-light">
+				<div class="flex">{/* Other taskbar items go here */}</div>
+				<span ref={clockRef} class="pl-1 pr-2 text-sm font-light">
 					{new Date().toLocaleTimeString().replace(/(?<=\d+:\d+):\d+/i, '')}
 				</span>
 			</div>
