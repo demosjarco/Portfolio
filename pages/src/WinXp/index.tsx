@@ -2,7 +2,8 @@ import { component$, useContext, useTask$ } from '@builder.io/qwik';
 import '@fontsource/noto-sans';
 import { PowerStateContext } from '../contexts';
 import { PowerState } from '../contexts/types';
-import IconsContainer from './Icons/IconsContainer';
+import Background from './background';
+import Taskbar from './Taskbar';
 
 export default component$(() => {
 	const power = useContext(PowerStateContext);
@@ -15,16 +16,16 @@ export default component$(() => {
 		<div
 			class={[
 				'font-sans',
-				'h-full',
+				'h-screen',
+				'w-screen',
 				'overflow-hidden',
 				'relative',
-				"bg-[url('/assets/Wallpaper/Bliss.jpg')]",
-				'bg-cover',
 				{
 					'animate-[powerOffAnimation_5s_forwards]': power.value === PowerState.logOff || power.value === PowerState.turnOff,
 				},
 			]}>
-			<IconsContainer />
+			<Background />
+			<Taskbar />
 		</div>
 	);
 });
