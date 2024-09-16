@@ -254,7 +254,7 @@ class CSPGenerator {
 		this.addDefault({ self: true });
 		this.addScript({ self: true, unsafeInline: true, unsafeEval: true, domains: ['https://static.cloudflareinsights.com'], nonce: true });
 		this.addStyle({ self: true, unsafeInline: true });
-		this.addImage({ self: true, blob: true });
+		this.addImage({ self: true, blob: true, all: true });
 		this.addUpgradeInsecureRequests();
 	}
 }
