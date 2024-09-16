@@ -20,7 +20,8 @@ export default component$(() => {
 					offsetSkidding: 0,
 				}),
 			);
-			startMenuRef.value?.show();
+			// For debug
+			// startMenuRef.value?.show();
 		}
 
 		cleanup(() => startMenuRef.value?.destroyAndRemoveInstance());
