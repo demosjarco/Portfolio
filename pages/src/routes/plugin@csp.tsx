@@ -264,13 +264,11 @@ export const onRequest: RequestHandler = async ({ sharedMap, platform, headers }
 	sharedMap.set('@nonce', csp.nonce);
 
 	if ('static' in platform) {
-		// Relative path stats where `npm` is ran. `-w pages` means `/pages` is the root.
-		const fileLocation: Parameters<(typeof import('node:fs/promises'))['readFile'] | (typeof import('node:fs/promises'))['writeFile']>[0] = './public/_headers';
-
 		await import('node:fs/promises')
 			.then(({ readFile, writeFile }) =>
-				readFile(fileLocation, 'utf8')
-					.then((data) => writeFile(fileLocation, data.replace(/(?<=Content-Security-Policy:\s+).*$/gim, csp.generateCSP()), 'utf8'))
+				// Relative path stats where `npm` is ran. `-w pages` means `/pages` is the root.
+				readFile('./public/_headers', 'utf8')
+					.then((data) => Promise.all([writeFile('./public/_headers', data.replace(/(?<=Content-Security-Policy:\s+).*$/gim, csp.generateCSP()), 'utf8'), writeFile('./dist/_headers', data.replace(/(?<=Content-Security-Policy:\s+).*$/gim, csp.generateCSP()), 'utf8')]))
 					.catch(console.error),
 			)
 			.catch(console.error);
