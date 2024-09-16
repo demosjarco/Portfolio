@@ -9,7 +9,11 @@ export default component$(() => {
 
 		const id = setInterval(
 			() => {
-				if (clockRef.value) clockRef.value.innerText = new Date().toLocaleTimeString().replace(/(?<=\d+:\d+):\d+/i, '');
+				if (clockRef.value) {
+					const date = new Date();
+					clockRef.value.innerText = date.toLocaleTimeString().replace(/(?<=\d+:\d+):\d+/i, '');
+					clockRef.value.title = date.toDateString();
+				}
 			},
 			// seconds * milliseconds
 			1 * 1000,
@@ -28,7 +32,7 @@ export default component$(() => {
 			}}>
 			<div class="my-auto flex">
 				<div class="flex">{/* Other taskbar items go here */}</div>
-				<span ref={clockRef} class="pl-1 pr-2 text-sm font-light">
+				<span ref={clockRef} class="pl-1 pr-2 text-sm font-light" title={new Date().toDateString()}>
 					{new Date().toLocaleTimeString().replace(/(?<=\d+:\d+):\d+/i, '')}
 				</span>
 			</div>
