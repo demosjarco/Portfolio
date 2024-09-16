@@ -262,4 +262,5 @@ export const onRequest: RequestHandler = ({ sharedMap, headers }) => {
 	const csp = new CSPGenerator();
 	sharedMap.set('@nonce', csp.nonce);
 	headers.set('Content-Security-Policy', csp.generateCSP());
+	console.debug(`Content-Security-Policy: ${csp.generateCSP()}`);
 };
