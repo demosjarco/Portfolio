@@ -7,7 +7,7 @@ export default component$(() => {
 	useVisibleTask$(({ track, cleanup }) => {
 		track(() => clockRef.value);
 
-		const id = setInterval(
+		const clockTimer = setInterval(
 			() => {
 				if (clockRef.value) {
 					const date = new Date();
@@ -19,7 +19,7 @@ export default component$(() => {
 			1 * 1000,
 		);
 
-		cleanup(() => clearInterval(id));
+		cleanup(() => clearInterval(clockTimer));
 	});
 
 	return (
