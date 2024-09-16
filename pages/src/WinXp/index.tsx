@@ -4,6 +4,7 @@ import { PowerStateContext } from '../contexts';
 import { PowerState } from '../contexts/types';
 import Background from './background';
 import Taskbar from './Taskbar';
+import Wdm from './wdm';
 
 export default component$(() => {
 	const power = useContext(PowerStateContext);
@@ -19,12 +20,15 @@ export default component$(() => {
 				'h-dvh',
 				'w-screen',
 				'overflow-hidden',
+				'flex',
+				'flex-col',
 				'relative',
 				{
 					'animate-[powerOffAnimation_5s_forwards]': power.value === PowerState.logOff || power.value === PowerState.turnOff,
 				},
 			]}>
 			<Background />
+			<Wdm />
 			<Taskbar />
 		</div>
 	);
