@@ -1,6 +1,6 @@
 import { component$, Slot, useContextProvider, useSignal } from '@builder.io/qwik';
 import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
-import { IconStateContext, PowerStateContext } from '../contexts';
+import { IconStateContext, PowerStateContext, WallpaperContext } from '../contexts';
 import { defaultIconState, defaultState } from '../contexts/signals';
 
 export const head: DocumentHead = {
@@ -45,6 +45,7 @@ export default component$(() => {
 	/**
 	 * @todo next z index
 	 */
+	useContextProvider(WallpaperContext, useSignal());
 	useContextProvider(IconStateContext, useSignal(defaultIconState));
 	/**
 	 * @todo selecting
