@@ -39,6 +39,6 @@ module.exports = {
 		'@typescript-eslint/no-unused-vars': 'warn',
 		'@typescript-eslint/no-unnecessary-condition': 'warn',
 		'@typescript-eslint/no-import-type-side-effects': 'error',
-		'@typescript-eslint/consistent-type-imports': 'error',
+		'@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
 	},
 };
