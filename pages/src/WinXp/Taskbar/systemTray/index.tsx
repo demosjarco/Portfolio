@@ -3,6 +3,7 @@ import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 export default component$(() => {
 	const clockRef = useSignal<HTMLSpanElement>();
 
+	// Must be `useVisibleTask()` because `useTask()` doesn't update on SSG
 	useVisibleTask$(({ track, cleanup }) => {
 		track(() => clockRef.value);
 
