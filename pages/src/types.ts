@@ -1,12 +1,10 @@
-export interface EnvVars extends Bindings, Secrets, Partial<PagesEnvironmentvariables>, Record<string, any> {
+export interface EnvVars extends Partial<PagesEnvironmentvariables>, Record<string, any> {
 	NODE_ENV: 'production' | 'development';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface Secrets {}
+// interface Secrets {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface Bindings {}
+// interface Bindings {}
 
 interface PagesEnvironmentvariables {
 	CF_PAGES: '0' | '1';
