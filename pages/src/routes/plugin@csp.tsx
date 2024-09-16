@@ -1,5 +1,4 @@
 import type { RequestHandler } from '@builder.io/qwik-city';
-import { isDev } from '@builder.io/qwik/build';
 import { randomBytes } from 'node:crypto';
 
 class CSPGenerator {
@@ -259,9 +258,7 @@ class CSPGenerator {
 	}
 }
 
-export const onRequest: RequestHandler = ({ platform, url, sharedMap, headers }) => {
-	if (isDev || ((!('static' in platform) || ('static' in platform && !platform.static)) && url.hostname === 'localhost')) return; // Will not return CSP headers in dev mode
-
+export const onRequest: RequestHandler = ({ sharedMap, headers }) => {
 	const csp = new CSPGenerator();
 	sharedMap.set('@nonce', csp.nonce);
 	headers.set('Content-Security-Policy', csp.generateCSP());
