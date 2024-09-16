@@ -12,7 +12,7 @@ export default component$(() => {
 				if (clockRef.value) clockRef.value.innerText = new Date().toLocaleTimeString().replace(/(?<=\d+:\d+):\d+/i, '');
 			},
 			// seconds * milliseconds
-			60 * 1000,
+			1 * 1000,
 		);
 
 		cleanup(() => clearInterval(id));
