@@ -263,6 +263,7 @@ export const onRequest: RequestHandler = async ({ sharedMap, platform, headers }
 	sharedMap.set('@nonce', csp.nonce);
 
 	if ('static' in platform) {
+		// Relative path stats where `npm` is ran. `-w pages` means `/pages` is the root.
 		const fileLocation: Parameters<(typeof import('node:fs/promises'))['readFile'] | (typeof import('node:fs/promises'))['writeFile']>[0] = './public/_headers';
 
 		await import('node:fs/promises')
