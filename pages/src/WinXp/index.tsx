@@ -16,7 +16,7 @@ export default component$(() => {
 		<div
 			class={[
 				'font-sans',
-				'h-screen',
+				'h-dvh',
 				'w-screen',
 				'overflow-hidden',
 				'relative',
