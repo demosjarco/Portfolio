@@ -258,9 +258,21 @@ class CSPGenerator {
 	}
 }
 
-export const onRequest: RequestHandler = ({ sharedMap, headers }) => {
+export const onRequest: RequestHandler = async ({ sharedMap, platform, headers }) => {
 	const csp = new CSPGenerator();
 	sharedMap.set('@nonce', csp.nonce);
-	headers.set('Content-Security-Policy', csp.generateCSP());
-	console.debug(`Content-Security-Policy: ${csp.generateCSP()}`);
+
+	if ('static' in platform) {
+		const fileLocation: Parameters<(typeof import('node:fs/promises'))['readFile'] | (typeof import('node:fs/promises'))['writeFile']>[0] = './public/_headers';
+
+		await import('node:fs/promises')
+			.then(({ readFile, writeFile }) =>
+				readFile(fileLocation, 'utf8')
+					.then((data) => writeFile(fileLocation, data.replace(/(?<=Content-Security-Policy:\s+).*$/gim, csp.generateCSP()), 'utf8'))
+					.catch(console.error),
+			)
+			.catch(console.error);
+	} else {
+		headers.set('Content-Security-Policy', csp.generateCSP());
+	}
 };
