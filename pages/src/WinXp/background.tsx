@@ -1,4 +1,4 @@
-import { component$, useContext, useTask$, type ClassList } from '@builder.io/qwik';
+import { component$, useContext, useVisibleTask$, type ClassList } from '@builder.io/qwik';
 
 import NostalgicSolitaire from '~/assets/wallpapers/new/Microsoft_Nostalgic_Solitaire_4k.jpg?jsx';
 import NostalgicWindows from '~/assets/wallpapers/new/Microsoft_Nostalgic_Windows_Wallpaper_4k.jpg?jsx';
@@ -46,7 +46,7 @@ import { Wallpapers } from '../contexts/types';
 export default component$(() => {
 	const wallpaperSelection = useContext(WallpaperContext);
 
-	useTask$(() => {
+	useVisibleTask$(() => {
 		const randomBytes = new Uint32Array(1);
 		crypto.getRandomValues(randomBytes);
 
