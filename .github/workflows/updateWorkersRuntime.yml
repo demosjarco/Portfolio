@@ -14,6 +14,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   update-toml:
     if: github.event_name == 'workflow_dispatch' || (startsWith(github.event.pull_request.head.ref, 'dependabot/npm_and_yarn/') && contains(github.event.pull_request.head.ref, '/cloudflare-') && github.actor == 'dependabot[bot]')
