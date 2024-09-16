@@ -6,7 +6,7 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin
   Expect-CT: max-age=86400, enforce
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com 'unsafe-inline' 'unsafe-eval' 'nonce-B275MWEh7f_091CawbXWCMzP9tMB32sFpnj-gfuSOqU'; style-src 'self' 'unsafe-inline'; img-src https: 'self' blob:; upgrade-insecure-requests
+  Content-Security-Policy: <placeholder>
 
 /build/*
   Cache-Control: no-cache, no-store
