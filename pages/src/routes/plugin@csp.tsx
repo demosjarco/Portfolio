@@ -1,4 +1,5 @@
 import type { RequestHandler } from '@builder.io/qwik-city';
+import { isDev } from '@builder.io/qwik/build';
 import { randomBytes } from 'node:crypto';
 
 class CSPGenerator {
@@ -260,6 +261,7 @@ class CSPGenerator {
 }
 
 export const onRequest: RequestHandler = async ({ sharedMap, platform, headers }) => {
+	if (isDev) return;
 	const csp = new CSPGenerator();
 	sharedMap.set('@nonce', csp.nonce);
 
