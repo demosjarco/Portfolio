@@ -251,7 +251,7 @@ class CSPGenerator {
 
 	private setupCSP() {
 		this.addDefault({ self: true });
-		this.addScript({ self: true, unsafeInline: true, unsafeEval: true, domains: [new URL('https://static.cloudflareinsights.com').origin], nonce: true });
+		this.addScript({ self: true, nonce: true, unsafeEval: true, domains: [new URL('https://static.cloudflareinsights.com').origin] });
 		this.addConnect({ self: true, domains: [new URL('https://cloudflareinsights.com').origin] });
 		this.addStyle({ self: true, unsafeInline: true });
 		this.addImage({ self: true, blob: true, all: true });
