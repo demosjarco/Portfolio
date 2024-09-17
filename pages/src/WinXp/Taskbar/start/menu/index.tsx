@@ -1,4 +1,7 @@
 import { component$ } from '@builder.io/qwik';
+import '@fontsource/noto-sans/100.css';
+import TurnOff from '~/assets/windowsIcons/shell32_1_28-8.png?jsx';
+import LogOff from '~/assets/windowsIcons/shell32_1_45-8.png?jsx';
 
 export default component$(() => {
 	return (
@@ -83,13 +86,20 @@ export default component$(() => {
 				<section class="w-1/2 bg-[#d3e5fa]"></section>
 			</article>
 			<footer
+				class="p-2.5"
 				style={{
 					background: 'linear-gradient(to bottom, #4282d6 0%, #3b85e0 3%, #418ae3 5%, #418ae3 17%, #3c87e2 21%, #3786e4 26%, #3482e3 29%, #2e7ee1 39%, #2374df 49%, #2072db 57%, #196edb 62%, #176bd8 72%, #1468d5 75%, #1165d2 83%, #0f61cb 88%)',
 				}}>
 				<div class="flex text-sm font-light">
 					<div class="grow"></div>
-					<span>Log Off</span>
-					<span>Turn Off Computer</span>
+					<button class="mr-0.5 flex">
+						<LogOff class="mr-0.5 h-5 w-5" />
+						<span class="ml-0.5">Log Off</span>
+					</button>
+					<button class="ml-0.5 flex">
+						<TurnOff class="mr-0.5 h-5 w-5" />
+						<span class="ml-0.5">Turn Off Computer</span>
+					</button>
 				</div>
 			</footer>
 		</aside>
