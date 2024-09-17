@@ -53,7 +53,7 @@ export default component$(() => {
 		wallpaperSelection.value = randomBytes[0]! % (Object.keys(Wallpapers).length / 2);
 	});
 
-	const styleClasses: ClassList = ['absolute', '-z-50', 'object-cover', 'object-center', 'block', 'h-full', 'w-full'];
+	const styleClasses: ClassList = ['absolute', '-z-50', 'object-fill', 'object-center', 'block', 'h-full', 'w-full'];
 
 	switch (wallpaperSelection.value) {
 		// New
