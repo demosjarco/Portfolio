@@ -22,8 +22,6 @@ module.exports = {
 	},
 	plugins: ['qwik'],
 	rules: {
-		// Note: you must disable the base rule as it can report incorrect errors
-		'qwik/jsx-img': 'off',
 		// We use visible task to defer `server$()` from page load
 		'qwik/no-use-visible-task': 'off',
 	},
