@@ -1,12 +1,15 @@
 import { component$, noSerialize, useSignal, useVisibleTask$, type NoSerialize } from '@builder.io/qwik';
 import '@fontsource/noto-sans/100.css';
 import { Dropdown } from 'flowbite';
+import Item from './item';
+import Separator from './separator';
+import SubMenuItem from './subMenuItem';
+
 import IeExplore from '~/assets/windowsIcons/iexplore_7-8.png?jsx';
 import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-3.png?jsx';
 import TurnOff from '~/assets/windowsIcons/shell32_1_28-8.png?jsx';
 import LogOff from '~/assets/windowsIcons/shell32_1_45-8.png?jsx';
-import Item from './item';
-import Separator from './separator';
+import MSN from '~/assets/windowsIcons/shell32_239-6.png?jsx';
 
 export default component$(() => {
 	const allProgramsButton = useSignal<HTMLButtonElement>();
@@ -98,7 +101,7 @@ export default component$(() => {
 								<div class="grow"></div>
 								<button ref={allProgramsButton} class="flex h-6 cursor-default">
 									<span class="align-sub text-sm font-bold">All Programs</span>
-									<svg class="my-auto ms-3 h-2.5 w-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+									<svg class="my-auto ms-3 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
 										<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
 									</svg>
 								</button>
@@ -106,57 +109,27 @@ export default component$(() => {
 							</div>
 							<div
 								ref={allProgramsMenuDiv}
-								class="z-10 hidden divide-y divide-gray-100 bg-white text-black shadow"
+								class="z-10 hidden bg-white pl-px text-black shadow"
 								style={{
 									'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
 								}}>
-								<ul class="py-2 text-sm" aria-labelledby="doubleDropdownButton">
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Set Program Access and Defaults
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Windows Catalog
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Windows Update
-										</a>
-									</li>
+								<ul class="whitespace-nowrap text-sm">
+									<SubMenuItem name="Set Program Access and Defaults"></SubMenuItem>
+									<SubMenuItem name="Windows Catalog"></SubMenuItem>
+									<SubMenuItem name="Windows Update"></SubMenuItem>
 									<Separator />
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Accessories
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Games
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Startup
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Internet Explorer
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											MSN
-										</a>
-									</li>
-									<li>
-										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Outlook Express
-										</a>
-									</li>
+									<SubMenuItem folder={true} name="Accessories" />
+									<SubMenuItem folder={true} name="Games" />
+									<SubMenuItem folder={true} name="Startup" />
+									<SubMenuItem name="Internet Explorer">
+										<IeExplore q:slot="icon" />
+									</SubMenuItem>
+									<SubMenuItem name="MSN">
+										<MSN q:slot="icon" />
+									</SubMenuItem>
+									<SubMenuItem name="Outlook Express">
+										<OutlookExpress q:slot="icon" />
+									</SubMenuItem>
 								</ul>
 							</div>
 						</li>
