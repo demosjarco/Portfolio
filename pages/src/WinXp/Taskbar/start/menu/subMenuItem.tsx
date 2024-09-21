@@ -5,7 +5,7 @@ export default component$<{ folder?: boolean; name: string }>(({ folder = false,
 	return (
 		<>
 			<button
-				class="block h-6 w-full px-2 py-1 pr-4 text-xs font-light"
+				class="block h-6 w-full cursor-default px-2 py-1 pr-4 text-xs font-light"
 				style={{
 					'box-shadow': 'inset 3px 0 #4081ff',
 				}}>
