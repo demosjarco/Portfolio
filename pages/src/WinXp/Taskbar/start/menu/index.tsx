@@ -15,6 +15,8 @@ export default component$(() => {
 				<img
 					src={new URL('https://github.com/demosjarco.png?size=48').href}
 					class="inline-block h-12 w-12 border-2 border-solid border-white"
+					width={48}
+					height={48}
 					decoding="async"
 					loading="lazy"
 					style={{
