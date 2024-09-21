@@ -16,8 +16,8 @@ export default component$(() => {
 			startMenuRef.value = noSerialize(
 				new Dropdown(startMenuDiv.value, startButton.value, {
 					placement: 'top',
-					offsetDistance: 0,
 					offsetSkidding: 0,
+					offsetDistance: 0,
 				}),
 			);
 			// For debug
