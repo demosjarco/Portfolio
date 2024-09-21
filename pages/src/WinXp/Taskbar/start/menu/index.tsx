@@ -1,5 +1,6 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, noSerialize, useSignal, useVisibleTask$, type NoSerialize } from '@builder.io/qwik';
 import '@fontsource/noto-sans/100.css';
+import { Dropdown } from 'flowbite';
 import IeExplore from '~/assets/windowsIcons/iexplore_7-8.png?jsx';
 import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-3.png?jsx';
 import TurnOff from '~/assets/windowsIcons/shell32_1_28-8.png?jsx';
@@ -8,6 +9,30 @@ import Item from './item';
 import Separator from './separator';
 
 export default component$(() => {
+	const allProgramsButton = useSignal<HTMLButtonElement>();
+	const allProgramsMenuDiv = useSignal<HTMLDivElement>();
+	const allProgramsMenuRef = useSignal<NoSerialize<Dropdown>>();
+
+	useVisibleTask$(({ track, cleanup }) => {
+		track(() => allProgramsButton.value);
+		track(() => allProgramsMenuDiv.value);
+
+		if (allProgramsButton.value && allProgramsMenuDiv.value) {
+			allProgramsMenuRef.value = noSerialize(
+				new Dropdown(allProgramsMenuDiv.value, allProgramsButton.value, {
+					placement: 'right-end',
+					triggerType: 'hover',
+					offsetSkidding: 0,
+					offsetDistance: 0,
+				}),
+			);
+			// For debug
+			// allProgramsMenuRef.value?.show();
+		}
+
+		cleanup(() => allProgramsMenuRef.value?.destroyAndRemoveInstance());
+	});
+
 	return (
 		<aside class="flex h-[480px] w-96 flex-col">
 			<header
@@ -68,33 +93,66 @@ export default component$(() => {
 							<IeExplore />
 						</Item>
 						<Separator />
-						<li>
-							<button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" type="button" class="flex w-full items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-								Dropdown
-								<svg class="ms-3 h-2.5 w-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+						<li class="p-1">
+							<button ref={allProgramsButton} class="flex h-6 w-full cursor-default text-black hover:bg-[#316ac5] hover:text-white">
+								<div class="grow"></div>
+								<span class="align-sub text-sm font-bold">All Programs</span>
+								<svg class="my-auto ms-3 h-2.5 w-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
 									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
 								</svg>
+								<div class="grow"></div>
 							</button>
-							<div id="doubleDropdown" class="z-10 hidden w-44 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700">
-								<ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="doubleDropdownButton">
+							<div
+								ref={allProgramsMenuDiv}
+								class="z-10 hidden w-44 divide-y divide-gray-100 bg-white shadow dark:bg-gray-700"
+								style={{
+									'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
+								}}>
+								<ul class="py-2 text-sm" aria-labelledby="doubleDropdownButton">
 									<li>
 										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Overview
+											Set Program Access and Defaults
 										</a>
 									</li>
 									<li>
 										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											My downloads
+											Windows Catalog
 										</a>
 									</li>
 									<li>
 										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Billing
+											Windows Update
+										</a>
+									</li>
+									<Separator />
+									<li>
+										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+											Accessories
 										</a>
 									</li>
 									<li>
 										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-											Rewards
+											Games
+										</a>
+									</li>
+									<li>
+										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+											Startup
+										</a>
+									</li>
+									<li>
+										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+											Internet Explorer
+										</a>
+									</li>
+									<li>
+										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+											MSN
+										</a>
+									</li>
+									<li>
+										<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+											Outlook Express
 										</a>
 									</li>
 								</ul>
