@@ -40,6 +40,7 @@ export default component$(() => {
 			<article class="divide flex grow divide-solid">
 				<section class="w-1/2 border-r border-solid border-r-[#95bdee] bg-white">
 					<ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+						{/* Hardcoded */}
 						<Item type="Internet" name="Internet Explorer">
 							<IeExplore />
 						</Item>
@@ -47,6 +48,7 @@ export default component$(() => {
 							<OutlookExpress />
 						</Item>
 						<Separator />
+						{/* Dynamic */}
 						<Item name="Internet Explorer">
 							<IeExplore />
 						</Item>
