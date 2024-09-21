@@ -1,5 +1,4 @@
 import { component$, noSerialize, useSignal, useVisibleTask$, type NoSerialize } from '@builder.io/qwik';
-import '@fontsource/noto-sans/100.css';
 import { Dropdown } from 'flowbite';
 import Item from './item';
 import Separator from './separator';
