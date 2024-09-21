@@ -1,7 +1,11 @@
 import { component$ } from '@builder.io/qwik';
 import '@fontsource/noto-sans/100.css';
+import IeExplore from '~/assets/windowsIcons/iexplore_7-8.png?jsx';
+import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-3.png?jsx';
 import TurnOff from '~/assets/windowsIcons/shell32_1_28-8.png?jsx';
 import LogOff from '~/assets/windowsIcons/shell32_1_45-8.png?jsx';
+import Item from './item';
+import Separator from './separator';
 
 export default component$(() => {
 	return (
@@ -35,12 +39,33 @@ export default component$(() => {
 			</header>
 			<article class="divide flex grow divide-solid">
 				<section class="w-1/2 border-r border-solid border-r-[#95bdee] bg-white">
-					<ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="multiLevelDropdownButton">
-						<li>
-							<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-								Dashboard
-							</a>
-						</li>
+					<ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+						<Item type="Internet" name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Item type="E-mail" name="Outlook Express">
+							<OutlookExpress />
+						</Item>
+						<Separator />
+						<Item name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Item name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Item name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Item name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Item name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Item name="Internet Explorer">
+							<IeExplore />
+						</Item>
+						<Separator />
 						<li>
 							<button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown" data-dropdown-placement="right-start" type="button" class="flex w-full items-center justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
 								Dropdown
@@ -72,16 +97,6 @@ export default component$(() => {
 									</li>
 								</ul>
 							</div>
-						</li>
-						<li>
-							<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-								Earnings
-							</a>
-						</li>
-						<li>
-							<a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-								Sign out
-							</a>
 						</li>
 					</ul>
 				</section>
