@@ -93,18 +93,20 @@ export default component$(() => {
 							<IeExplore />
 						</Item>
 						<Separator />
-						<li class="p-1">
-							<button ref={allProgramsButton} class="flex h-6 w-full cursor-default text-black hover:bg-[#316ac5] hover:text-white">
+						<li class="w-full p-1 text-black hover:bg-[#316ac5] hover:text-white">
+							<div class="flex">
 								<div class="grow"></div>
-								<span class="align-sub text-sm font-bold">All Programs</span>
-								<svg class="my-auto ms-3 h-2.5 w-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-								</svg>
+								<button ref={allProgramsButton} class="flex h-6 cursor-default">
+									<span class="align-sub text-sm font-bold">All Programs</span>
+									<svg class="my-auto ms-3 h-2.5 w-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+										<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+									</svg>
+								</button>
 								<div class="grow"></div>
-							</button>
+							</div>
 							<div
 								ref={allProgramsMenuDiv}
-								class="z-10 hidden w-44 divide-y divide-gray-100 bg-white shadow dark:bg-gray-700"
+								class="z-10 hidden divide-y divide-gray-100 bg-white text-black shadow"
 								style={{
 									'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
 								}}>
