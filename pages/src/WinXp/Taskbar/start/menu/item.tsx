@@ -20,7 +20,7 @@ function isRecentAppsProps(obj: BaseAppProps): obj is RecentAppsProps {
 export default component$<DefaultAppProps | RecentAppsProps>((props) => {
 	return (
 		<li class="flex p-1">
-			<div class="mx-1 my-auto h-7 w-7 align-text-bottom">
+			<div class="mx-1 my-auto h-8 w-8 align-text-bottom">
 				<Slot />
 			</div>
 			<div class="mx-1 flex flex-col">
