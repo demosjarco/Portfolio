@@ -120,15 +120,21 @@ export default component$(() => {
 									<Separator />
 									<SubMenu>
 										<SubMenuItem q:slot="root" folder={true} name="Accessories" />
-										<SubMenuItem name="Internet Explorer">
-											<IeExplore q:slot="icon" />
-										</SubMenuItem>
-										<SubMenuItem name="Internet Explorer">
-											<IeExplore q:slot="icon" />
-										</SubMenuItem>
-										<SubMenuItem name="Internet Explorer">
-											<IeExplore q:slot="icon" />
-										</SubMenuItem>
+										<SubMenu empty={true}>
+											<SubMenuItem q:slot="root" folder={true} name="Accessibility" />
+										</SubMenu>
+										<SubMenu empty={true}>
+											<SubMenuItem q:slot="root" folder={true} name="Communications" />
+										</SubMenu>
+										<SubMenu empty={true}>
+											<SubMenuItem q:slot="root" folder={true} name="Entertainment" />
+										</SubMenu>
+										<SubMenu>
+											<SubMenuItem q:slot="root" folder={true} name="System Tools" />
+											<SubMenuItem name="Internet Explorer (No Add-ons)">
+												<IeExplore q:slot="icon" />
+											</SubMenuItem>
+										</SubMenu>
 									</SubMenu>
 									<SubMenu empty={true}>
 										<SubMenuItem q:slot="root" folder={true} name="Games" />
