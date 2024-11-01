@@ -36,7 +36,8 @@ updates:
     ignore:
       # Currently not supported by qwik
       - dependency-name: 'eslint'
-        versions: '>=9.0.0'
+        versions:
+          - '>=9.0.0'
       # Currently not supported by qwik
       - dependency-name: 'vite-tsconfig-paths'
         versions:
