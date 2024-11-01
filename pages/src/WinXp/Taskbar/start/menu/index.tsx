@@ -9,6 +9,7 @@ import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-3.png?jsx';
 import TurnOff from '~/assets/windowsIcons/shell32_1_28-8.png?jsx';
 import LogOff from '~/assets/windowsIcons/shell32_1_45-8.png?jsx';
 import MSN from '~/assets/windowsIcons/shell32_239-6.png?jsx';
+import SubMenu from './subMenu';
 
 export default component$(() => {
 	const allProgramsButton = useSignal<HTMLButtonElement>();
@@ -117,9 +118,33 @@ export default component$(() => {
 									<SubMenuItem name="Windows Catalog"></SubMenuItem>
 									<SubMenuItem name="Windows Update"></SubMenuItem>
 									<Separator />
-									<SubMenuItem folder={true} name="Accessories" />
-									<SubMenuItem folder={true} name="Games" />
-									<SubMenuItem folder={true} name="Startup" />
+									<SubMenu>
+										<SubMenuItem q:slot="root" folder={true} name="Accessories" />
+										<SubMenuItem name="Internet Explorer">
+											<IeExplore q:slot="icon" />
+										</SubMenuItem>
+										<SubMenuItem name="Internet Explorer">
+											<IeExplore q:slot="icon" />
+										</SubMenuItem>
+										<SubMenuItem name="Internet Explorer">
+											<IeExplore q:slot="icon" />
+										</SubMenuItem>
+									</SubMenu>
+									<SubMenu>
+										<SubMenuItem q:slot="root" folder={true} name="Games" />
+										<SubMenuItem name="Internet Explorer">
+											<IeExplore q:slot="icon" />
+										</SubMenuItem>
+										<SubMenuItem name="Internet Explorer">
+											<IeExplore q:slot="icon" />
+										</SubMenuItem>
+										<SubMenuItem name="Internet Explorer">
+											<IeExplore q:slot="icon" />
+										</SubMenuItem>
+									</SubMenu>
+									<SubMenu empty={true}>
+										<SubMenuItem q:slot="root" folder={true} name="Startup" />
+									</SubMenu>
 									<SubMenuItem name="Internet Explorer">
 										<IeExplore q:slot="icon" />
 									</SubMenuItem>
