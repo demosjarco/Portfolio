@@ -130,17 +130,8 @@ export default component$(() => {
 											<IeExplore q:slot="icon" />
 										</SubMenuItem>
 									</SubMenu>
-									<SubMenu>
+									<SubMenu empty={true}>
 										<SubMenuItem q:slot="root" folder={true} name="Games" />
-										<SubMenuItem name="Internet Explorer">
-											<IeExplore q:slot="icon" />
-										</SubMenuItem>
-										<SubMenuItem name="Internet Explorer">
-											<IeExplore q:slot="icon" />
-										</SubMenuItem>
-										<SubMenuItem name="Internet Explorer">
-											<IeExplore q:slot="icon" />
-										</SubMenuItem>
 									</SubMenu>
 									<SubMenu empty={true}>
 										<SubMenuItem q:slot="root" folder={true} name="Startup" />
