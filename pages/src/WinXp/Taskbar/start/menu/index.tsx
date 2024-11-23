@@ -1,5 +1,4 @@
-import { component$, noSerialize, useSignal, useVisibleTask$, type NoSerialize } from '@builder.io/qwik';
-import { Dropdown } from 'flowbite';
+import { component$ } from '@builder.io/qwik';
 import Item from './item';
 import Separator from './separator';
 import SubMenuItem from './subMenuItem';
@@ -12,30 +11,6 @@ import MSN from '~/assets/windowsIcons/shell32_239-6.png?jsx';
 import SubMenu from './subMenu';
 
 export default component$(() => {
-	const allProgramsButton = useSignal<HTMLButtonElement>();
-	const allProgramsMenuDiv = useSignal<HTMLDivElement>();
-	const allProgramsMenuRef = useSignal<NoSerialize<Dropdown>>();
-
-	useVisibleTask$(({ track, cleanup }) => {
-		track(() => allProgramsButton.value);
-		track(() => allProgramsMenuDiv.value);
-
-		if (allProgramsButton.value && allProgramsMenuDiv.value) {
-			allProgramsMenuRef.value = noSerialize(
-				new Dropdown(allProgramsMenuDiv.value, allProgramsButton.value, {
-					placement: 'right-end',
-					triggerType: 'hover',
-					offsetSkidding: 0,
-					offsetDistance: 0,
-				}),
-			);
-			// For debug
-			// allProgramsMenuRef.value?.show();
-		}
-
-		cleanup(() => allProgramsMenuRef.value?.destroyAndRemoveInstance());
-	});
-
 	return (
 		<aside class="flex h-[480px] w-96 flex-col">
 			<header
@@ -99,7 +74,7 @@ export default component$(() => {
 						<li class="w-full p-1 text-black hover:bg-[#316ac5] hover:text-white">
 							<div class="flex">
 								<div class="grow"></div>
-								<button ref={allProgramsButton} class="flex h-6 cursor-default">
+								<button class="flex h-6 cursor-default" data-dropdown-toggle="allProgramsMenu" data-dropdown-placement="right-end" data-dropdown-trigger="hover" data-dropdown-offset-distance={0} data-dropdown-offset-skidding={0}>
 									<span class="align-sub text-sm font-bold">All Programs</span>
 									<svg class="my-auto ms-3 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
 										<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
@@ -108,7 +83,7 @@ export default component$(() => {
 								<div class="grow"></div>
 							</div>
 							<div
-								ref={allProgramsMenuDiv}
+								id="allProgramsMenu"
 								class="z-10 hidden bg-white pl-px text-black shadow"
 								style={{
 									'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
