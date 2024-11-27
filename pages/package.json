@@ -52,7 +52,7 @@
 		"autoprefixer": "^10.4.20",
 		"eslint": "^8.57.1",
 		"eslint-plugin-qwik": "^1.11.0",
-		"less": "^4.2.0",
+		"less": "^4.2.1",
 		"postcss": "^8.4.49",
 		"postcss-import": "^16.1.0",
 		"postcss-nesting": "^13.0.1",
