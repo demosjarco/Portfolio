@@ -1,5 +1,5 @@
+import { isDev } from '@builder.io/qwik';
 import type { RequestHandler } from '@builder.io/qwik-city';
-import { isDev } from '@builder.io/qwik/build';
 import { randomBytes } from 'node:crypto';
 
 class CSPGenerator {
