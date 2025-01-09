@@ -1,6 +1,6 @@
 name = "demosjarco-portfolio"
 pages_build_output_dir = "dist"
-compatibility_date = "2024-12-18"
+compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat_v2"]
 upload_source_maps = true
 
@@ -10,7 +10,7 @@ SKIP_DEPENDENCY_INSTALL = "1"
 
 
 [env.production]
-compatibility_date = "2024-12-18"
+compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat_v2"]
 upload_source_maps = true
 
