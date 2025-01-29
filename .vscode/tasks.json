@@ -23,7 +23,7 @@
 		{
 			"label": "Qwik Types",
 			"type": "typescript",
-			"tsconfig": "tsconfig.json",
+			"tsconfig": "pages/tsconfig.json",
 			"option": "watch",
 			"problemMatcher": ["$tsc-watch"],
 			"isBackground": true,
