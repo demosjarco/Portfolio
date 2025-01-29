@@ -7,6 +7,5 @@ module.exports = {
 			edition: '2024-02',
 		},
 		tailwindcss: {},
-		autoprefixer: {},
 	},
 };

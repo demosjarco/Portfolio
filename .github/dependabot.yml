@@ -62,7 +62,6 @@ updates:
           - 'tailwind*'
           - 'postcss'
           - 'postcss-*'
-          - 'autoprefixer'
           - 'flowbite'
           - 'less'
           - '@qwikest/icons'
