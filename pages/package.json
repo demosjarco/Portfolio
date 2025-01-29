@@ -10,14 +10,13 @@
 		"build.server": "vite build -c adapters/static/vite.config.ts",
 		"build.types": "tsc --incremental --noEmit",
 		"deploy": "wrangler pages deploy ./dist",
-		"dev": "vite --open --mode ssr",
-		"dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
 		"lint": "eslint \"src/**/*.ts*\"",
 		"lint:fix": "npm run lint -- --fix",
 		"preview": "qwik build preview && vite preview --open",
 		"preview:lhci": "qwik build preview && vite preview --port 8080",
 		"clean": "npx -y rimraf@latest --glob ./**/.wrangler ./dist ./server ./tmp",
 		"start": "vite --mode ssr",
+		"dev": "wrangler pages dev dist --compatibility-flag nodejs_compat_v2 --live-reload true --local-protocol http --ip localhost --port 8787",
 		"qwik": "qwik"
 	},
 	"repository": {
