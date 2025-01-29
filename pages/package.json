@@ -1,6 +1,6 @@
 {
-	"type": "module",
 	"name": "pages",
+	"type": "module",
 	"scripts": {
 		"build": "qwik build",
 		"prebuild:pages": "npm ci --include-workspace-root --workspace pages --include dev",
