@@ -60,8 +60,6 @@ updates:
       design:
         patterns:
           - 'tailwind*'
-          - 'postcss'
-          - 'postcss-*'
           - 'flowbite'
           - 'less'
           - '@qwikest/icons'
