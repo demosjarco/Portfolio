@@ -69,6 +69,7 @@ updates:
           - '@typescript-eslint/*'
       design:
         patterns:
+          - '@tailwindcss/*'
           - 'tailwind*'
           - 'flowbite'
           - 'less'
