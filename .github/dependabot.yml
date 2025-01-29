@@ -62,7 +62,6 @@ updates:
           - '@tailwindcss/*'
           - 'tailwind*'
           - 'flowbite'
-          - 'less'
           - '@qwikest/icons'
           - '@fontsource/*'
       typescript-core:
