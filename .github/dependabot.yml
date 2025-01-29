@@ -87,6 +87,7 @@ updates:
           - '@types/*'
           - '@cloudflare/workers-types'
           - 'turnstile-types'
+          - 'zaraz-ts'
       qwik:
         patterns:
           - '@builder.io/qwik'
