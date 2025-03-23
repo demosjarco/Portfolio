@@ -1,0 +1,28 @@
+{
+	"$schema": "../node_modules/wrangler/config-schema.json",
+	"name": "demosjarco-portfolio",
+	"pages_build_output_dir": "dist",
+	"compatibility_date": "2025-01-29",
+	"compatibility_flags": ["nodejs_compat"],
+	"upload_source_maps": true,
+	"vars": {
+		"NODE_ENV": "development",
+		"SKIP_DEPENDENCY_INSTALL": "1",
+	},
+	"env": {
+		"production": {
+			"compatibility_date": "2025-01-29",
+			"compatibility_flags": ["nodejs_compat"],
+			"upload_source_maps": false,
+			"vars": {
+				"NODE_ENV": "production",
+				"SKIP_DEPENDENCY_INSTALL": "1",
+			},
+		},
+	},
+	"dev": {
+		"local_protocol": "http",
+		"ip": "localhost",
+		"port": 8787,
+	},
+}
