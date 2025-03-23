@@ -7,7 +7,7 @@
 	"upload_source_maps": true,
 	"vars": {
 		"NODE_ENV": "development",
-		"SKIP_DEPENDENCY_INSTALL": "1",
+		"SKIP_DEPENDENCY_INSTALL": "1"
 	},
 	"env": {
 		"production": {
@@ -16,13 +16,13 @@
 			"upload_source_maps": false,
 			"vars": {
 				"NODE_ENV": "production",
-				"SKIP_DEPENDENCY_INSTALL": "1",
-			},
-		},
+				"SKIP_DEPENDENCY_INSTALL": "1"
+			}
+		}
 	},
 	"dev": {
 		"local_protocol": "http",
 		"ip": "localhost",
-		"port": 8787,
-	},
+		"port": 8787
+	}
 }
