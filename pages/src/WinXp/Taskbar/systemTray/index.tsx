@@ -32,7 +32,7 @@ export default component$(() => {
 			}}>
 			<div class="my-auto flex">
 				<div class="flex">{/* Other taskbar items go here */}</div>
-				<span ref={clockRef} class="pl-1 pr-2 text-sm font-light" title={new Date().toDateString()}>
+				<span ref={clockRef} class="pr-2 pl-1 text-sm font-light" title={new Date().toDateString()}>
 					{new Date().toLocaleTimeString().replace(/(?<=\d+:\d+):\d+/i, '')}
 				</span>
 			</div>
