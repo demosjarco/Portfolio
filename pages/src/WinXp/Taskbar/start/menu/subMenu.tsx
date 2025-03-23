@@ -39,7 +39,7 @@ export default component$<{ empty?: boolean }>(({ empty = false, ...props }) => 
 				style={{
 					'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
 				}}>
-				<ul class="whitespace-nowrap text-sm">{empty ? <SubMenuItem name="(Empty)" /> : <Slot />}</ul>
+				<ul class="text-sm whitespace-nowrap">{empty ? <SubMenuItem name="(Empty)" /> : <Slot />}</ul>
 			</div>
 		</li>
 	);

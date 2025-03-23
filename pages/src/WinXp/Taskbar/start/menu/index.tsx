@@ -88,7 +88,7 @@ export default component$(() => {
 								style={{
 									'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
 								}}>
-								<ul class="whitespace-nowrap text-sm">
+								<ul class="text-sm whitespace-nowrap">
 									<SubMenuItem name="Set Program Access and Defaults"></SubMenuItem>
 									<SubMenuItem name="Windows Catalog"></SubMenuItem>
 									<SubMenuItem name="Windows Update"></SubMenuItem>

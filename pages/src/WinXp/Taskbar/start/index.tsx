@@ -6,7 +6,7 @@ export default component$(() => {
 	return (
 		<>
 			<button
-				class="flex cursor-default flex-col rounded-r-lg pl-2 pr-3"
+				class="flex cursor-default flex-col rounded-r-lg pr-3 pl-2"
 				style={{
 					background: 'linear-gradient(180deg, #5ca05c 3%, #8cbe8b 6%, #75b275 10%, #64ab64 12%, #4e9f4d 15%, #499e48 18%, #469e46 20%, #45a045 23%, #43a543 38%, #48aa41 86%, #47b747 89%, #46b246 92%, #44ad44 95%, #3c963c 98%)',
 					'border-right': '1px solid #1042af',
