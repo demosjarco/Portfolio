@@ -47,11 +47,11 @@
 		"@rollup/plugin-node-resolve": "^16.0.1",
 		"@tailwindcss/vite": "^4.0.15",
 		"@types/eslint": "^8.56.10",
-		"@typescript-eslint/eslint-plugin": "^8.27.0",
+		"@typescript-eslint/eslint-plugin": "^8.44.1",
 		"@typescript-eslint/parser": "^8.27.0",
 		"eslint": "^8.57.1",
-		"eslint-plugin-qwik": "^1.12.1",
-		"prettier-plugin-tailwindcss": "^0.6.11",
+		"eslint-plugin-qwik": "^1.16.1",
+		"prettier-plugin-tailwindcss": "^0.6.14",
 		"tailwindcss": "^4.0.0",
 		"vite-tsconfig-paths": "^4.3.2"
 	}
