@@ -42,8 +42,8 @@
 		"flowbite": "^3.1.2"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "^1.12.1",
-		"@builder.io/qwik-city": "^1.12.1",
+		"@builder.io/qwik": "^1.16.1",
+		"@builder.io/qwik-city": "^1.16.1",
 		"@rollup/plugin-node-resolve": "^16.0.1",
 		"@tailwindcss/vite": "^4.0.15",
 		"@types/eslint": "^8.56.10",
