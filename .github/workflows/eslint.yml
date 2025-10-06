@@ -41,7 +41,7 @@ jobs:
       security-events: write
       actions: read
     steps:
-      - uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+      - uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
           disable-sudo: true
@@ -85,7 +85,7 @@ jobs:
       - run: npx -w pages eslint . --ext .js,.jsx,.ts,.tsx --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
         working-directory: pages
         continue-on-error: true
-      - uses: github/codeql-action/upload-sarif@5f8171a638ada777af81d42b55959a643bb29017 # v3.28.12
+      - uses: github/codeql-action/upload-sarif@64d10c13136e1c5bce3e5fbde8d4906eeaafc885 # v3.30.6
         with:
           sarif_file: pages/eslint-results.sarif
           wait-for-processing: false
