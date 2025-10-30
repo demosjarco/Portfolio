@@ -45,7 +45,7 @@
 		"@builder.io/qwik": "^1.16.1",
 		"@builder.io/qwik-city": "^1.16.1",
 		"@rollup/plugin-node-resolve": "^16.0.2",
-		"@tailwindcss/vite": "^4.1.14",
+		"@tailwindcss/vite": "^4.1.16",
 		"@types/eslint": "^9.6.1",
 		"@typescript-eslint/eslint-plugin": "^8.45.0",
 		"@typescript-eslint/parser": "^8.27.0",
