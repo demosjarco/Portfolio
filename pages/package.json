@@ -39,13 +39,13 @@
 	"dependencies": {
 		"@fontsource/noto-sans": "^5.2.10",
 		"@qwikest/icons": "^0.0.13",
-		"flowbite": "^3.1.2"
+		"flowbite": "^4.0.1"
 	},
 	"devDependencies": {
 		"@builder.io/qwik": "^1.16.1",
 		"@builder.io/qwik-city": "^1.16.1",
 		"@rollup/plugin-node-resolve": "^16.0.2",
-		"@tailwindcss/vite": "^4.1.14",
+		"@tailwindcss/vite": "^4.1.18",
 		"@types/eslint": "^9.6.1",
 		"@typescript-eslint/eslint-plugin": "^8.45.0",
 		"@typescript-eslint/parser": "^8.27.0",
