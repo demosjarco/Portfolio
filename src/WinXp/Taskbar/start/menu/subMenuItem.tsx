@@ -1,14 +1,11 @@
-import { component$, Slot, type ClassList, type CSSProperties, type JSXOutput } from '@builder.io/qwik';
+import { component$, Slot, type ClassList } from '@builder.io/qwik';
 import Folder from '~/assets/windowsIcons/shell32_37-6.png?jsx';
 
-export default component$<{ folder?: boolean; name: string }>(({ folder = false, ...props }) => {
+export default component$<{ folder?: boolean; name: string; href?: string }>(({ folder = false, ...props }) => {
 	const rootClasses: ClassList = 'block h-6 w-full cursor-default px-2 py-1 pr-4 text-xs font-light';
-	const rootStyle: CSSProperties = {
-		'box-shadow': 'inset 3px 0 #4081ff',
-	};
-	const rootContent: JSXOutput = (
+	const rootContent = (
 		<span class="my-auto flex">
-			<div class="h-4 w-4">{folder ? <Folder /> : <Slot name="icon" />}</div>
+			<div class="h-4 w-4 shrink-0">{folder ? <Folder /> : <Slot name="icon" />}</div>
 			<span class="my-auto pl-2">{props.name}</span>
 			<div class="grow"></div>
 			{folder ? (
@@ -19,18 +16,18 @@ export default component$<{ folder?: boolean; name: string }>(({ folder = false,
 		</span>
 	);
 
-	return (
-		<>
-			{folder ? (
-				<div class={rootClasses} style={rootStyle}>
+	return folder ? (
+		<div class={rootClasses}>{rootContent}</div>
+	) : (
+		<li class="block w-full text-black hover:bg-[#2f71cd] hover:text-white">
+			{props.href ? (
+				<a href={props.href} target="_blank" referrerPolicy="no-referrer" rel="noopener" class={[rootClasses, 'text-inherit no-underline']}>
 					{rootContent}
-				</div>
+				</a>
 			) : (
-				<button class={rootClasses} style={rootStyle}>
-					{rootContent}
-				</button>
+				<button class={rootClasses}>{rootContent}</button>
 			)}
 			<Slot name="submenu" />
-		</>
+		</li>
 	);
 });
