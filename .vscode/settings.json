@@ -4,8 +4,10 @@
 		"source.fixAll": "explicit",
 		"source.organizeImports": "explicit"
 	},
-	"typescript.tsdk": "./node_modules/typescript/lib",
-	"github-actions.workflows.pinned.workflows": [],
+	"js/ts.preferences.importModuleSpecifier": "non-relative",
+	"js/ts.tsdk.path": "./node_modules/typescript/lib",
+	"github-actions.workflows.pinned.refresh.enabled": true,
+	"github-actions.workflows.pinned.workflows": [".github/workflows/publish.yml"],
 	"material-icon-theme.activeIconPack": "qwik",
 	"editor.quickSuggestions": {
 		"strings": "on"
