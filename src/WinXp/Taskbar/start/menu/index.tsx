@@ -1,19 +1,30 @@
 import { component$ } from '@builder.io/qwik';
+import MyComputer from '~/assets/windowsIcons/explorer_1_100-8.png?jsx';
 import IeExplore from '~/assets/windowsIcons/iexplore_7-8.png?jsx';
+import Globe from '~/assets/windowsIcons/inetcpl_1_1301-1.png?jsx';
+import ProgramDefaults from '~/assets/windowsIcons/moricons_1_114-8.png?jsx';
 import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-3.png?jsx';
+import ControlPanel from '~/assets/windowsIcons/shell32_1_137-2.png?jsx';
+import PrintersAndFaxes from '~/assets/windowsIcons/shell32_1_138-5.png?jsx';
+import Search from '~/assets/windowsIcons/shell32_1_23-2.png?jsx';
+import MyDocuments from '~/assets/windowsIcons/shell32_1_235-2.png?jsx';
+import MyPictures from '~/assets/windowsIcons/shell32_1_237-2.png?jsx';
+import MyMusic from '~/assets/windowsIcons/shell32_1_238-2.png?jsx';
+import HelpAndSupport from '~/assets/windowsIcons/shell32_1_24-2.png?jsx';
+import Run from '~/assets/windowsIcons/shell32_1_25-5.png?jsx';
 import TurnOff from '~/assets/windowsIcons/shell32_1_28-8.png?jsx';
 import LogOff from '~/assets/windowsIcons/shell32_1_45-8.png?jsx';
-import MSN from '~/assets/windowsIcons/shell32_239-6.png?jsx';
+import MyRecentDocuments from '~/assets/windowsIcons/shell32_1_46-1.png?jsx';
+import AllPrograms from './allPrograms';
 import Item from './item';
+import RightPanelItem from './rightPanelItem';
 import Separator from './separator';
-import SubMenu from './subMenu';
-import SubMenuItem from './subMenuItem';
 
 export default component$(() => {
 	return (
-		<aside class="flex h-[480px] w-96 flex-col">
+		<aside class="flex h-120 w-96 flex-col font-sans">
 			<header
-				class="flex overflow-hidden rounded-t-lg p-2"
+				class="flex shrink-0 overflow-hidden rounded-t-lg p-2"
 				style={{
 					background: 'linear-gradient(to bottom, #1868ce 0%, #0e60cb 12%, #0e60cb 20%, #1164cf 32%, #1667cf 33%, #1b6cd3 47%, #1e70d9 54%, #2476dc 60%, #297ae0 65%, #3482e3 77%, #3786e5 79%, #428ee9 90%, #4791eb 100%)',
 					'box-shadow': 'inset 1px 1px 2px rgba(255, 255, 255, 0.5)',
@@ -39,101 +50,68 @@ export default component$(() => {
 					</span>
 				</div>
 			</header>
-			<article class="divide flex grow divide-solid">
+			<article class="divide flex min-h-0 grow divide-solid overflow-hidden">
 				<section class="w-1/2 border-r border-solid border-r-[#95bdee] bg-white">
-					<ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+					<ul class="flex h-full flex-col py-2 text-sm text-black">
 						{/* Hardcoded */}
 						<Item type="Internet" name="Internet Explorer">
 							<IeExplore />
 						</Item>
-						<Item type="E-mail" name="Outlook Express">
+						<Item type="E-mail" name="Outlook Express" href="mailto:demosjarco@protonmail.com">
 							<OutlookExpress />
 						</Item>
 						<Separator />
-						{/* Dynamic */}
-						<Item name="Internet Explorer">
-							<IeExplore />
+						{/* Frequently used programs */}
+						<Item name="GitHub" href="https://github.com/demosjarco">
+							<Globe />
 						</Item>
-						<Item name="Internet Explorer">
-							<IeExplore />
-						</Item>
-						<Item name="Internet Explorer">
-							<IeExplore />
-						</Item>
-						<Item name="Internet Explorer">
-							<IeExplore />
-						</Item>
-						<Item name="Internet Explorer">
-							<IeExplore />
-						</Item>
-						<Item name="Internet Explorer">
-							<IeExplore />
-						</Item>
+						<li class="grow"></li>
 						<Separator />
-						<li class="w-full p-1 text-black hover:bg-[#316ac5] hover:text-white">
-							<div class="flex">
-								<div class="grow"></div>
-								<button class="flex h-6 cursor-default" data-dropdown-toggle="allProgramsMenu" data-dropdown-placement="right-end" data-dropdown-trigger="hover" data-dropdown-offset-distance={0} data-dropdown-offset-skidding={0}>
-									<span class="align-sub text-sm font-bold">All Programs</span>
-									<svg class="my-auto ms-3 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-										<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-									</svg>
-								</button>
-								<div class="grow"></div>
-							</div>
-							<div
-								id="allProgramsMenu"
-								class="z-10 hidden bg-white pl-px text-black shadow"
-								style={{
-									'box-shadow': 'inset 0 0 0 1px #72ade9, 2px 3px 3px rgb(0, 0, 0, 0.5)',
-								}}>
-								<ul class="text-sm whitespace-nowrap">
-									<SubMenuItem name="Set Program Access and Defaults"></SubMenuItem>
-									<SubMenuItem name="Windows Catalog"></SubMenuItem>
-									<SubMenuItem name="Windows Update"></SubMenuItem>
-									<Separator />
-									<SubMenu>
-										<SubMenuItem q:slot="root" folder={true} name="Accessories" />
-										<SubMenu empty={true}>
-											<SubMenuItem q:slot="root" folder={true} name="Accessibility" />
-										</SubMenu>
-										<SubMenu empty={true}>
-											<SubMenuItem q:slot="root" folder={true} name="Communications" />
-										</SubMenu>
-										<SubMenu empty={true}>
-											<SubMenuItem q:slot="root" folder={true} name="Entertainment" />
-										</SubMenu>
-										<SubMenu>
-											<SubMenuItem q:slot="root" folder={true} name="System Tools" />
-											<SubMenuItem name="Internet Explorer (No Add-ons)">
-												<IeExplore q:slot="icon" />
-											</SubMenuItem>
-										</SubMenu>
-									</SubMenu>
-									<SubMenu empty={true}>
-										<SubMenuItem q:slot="root" folder={true} name="Games" />
-									</SubMenu>
-									<SubMenu empty={true}>
-										<SubMenuItem q:slot="root" folder={true} name="Startup" />
-									</SubMenu>
-									<SubMenuItem name="Internet Explorer">
-										<IeExplore q:slot="icon" />
-									</SubMenuItem>
-									<SubMenuItem name="MSN">
-										<MSN q:slot="icon" />
-									</SubMenuItem>
-									<SubMenuItem name="Outlook Express">
-										<OutlookExpress q:slot="icon" />
-									</SubMenuItem>
-								</ul>
-							</div>
-						</li>
+						<AllPrograms />
 					</ul>
 				</section>
-				<section class="w-1/2 bg-[#d3e5fa]"></section>
+				<section class="w-1/2 bg-[#d3e5fa]">
+					<ul class="px-1.5 py-2">
+						<RightPanelItem name="My Documents" bold>
+							<MyDocuments />
+						</RightPanelItem>
+						<RightPanelItem name="My Recent Documents" bold>
+							<MyRecentDocuments class="h-6 w-6" style={{ 'object-fit': 'contain' }} />
+						</RightPanelItem>
+						<RightPanelItem name="My Pictures" bold>
+							<MyPictures />
+						</RightPanelItem>
+						<RightPanelItem name="My Music" bold>
+							<MyMusic />
+						</RightPanelItem>
+						<RightPanelItem name="My Computer" bold>
+							<MyComputer />
+						</RightPanelItem>
+						<Separator />
+						<RightPanelItem name="Control Panel">
+							<ControlPanel />
+						</RightPanelItem>
+						<RightPanelItem name="Set Program Access and Defaults">
+							<ProgramDefaults />
+						</RightPanelItem>
+						<RightPanelItem name="Printers and Faxes">
+							<PrintersAndFaxes />
+						</RightPanelItem>
+						<Separator />
+						<RightPanelItem name="Help and Support">
+							<HelpAndSupport />
+						</RightPanelItem>
+						<RightPanelItem name="Search">
+							<Search />
+						</RightPanelItem>
+						<RightPanelItem name="Run...">
+							<Run />
+						</RightPanelItem>
+					</ul>
+				</section>
 			</article>
 			<footer
-				class="p-2.5"
+				class="shrink-0 p-2.5"
 				style={{
 					background: 'linear-gradient(to bottom, #4282d6 0%, #3b85e0 3%, #418ae3 5%, #418ae3 17%, #3c87e2 21%, #3786e4 26%, #3482e3 29%, #2e7ee1 39%, #2374df 49%, #2072db 57%, #196edb 62%, #176bd8 72%, #1468d5 75%, #1165d2 83%, #0f61cb 88%)',
 				}}>
