@@ -20,11 +20,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:
-          disable-sudo: true
+          disable-sudo-and-containers: true
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Git Setup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
       # https://github.com/actions/cache/blob/main/examples.md#rust---cargo
       # https://github.com/rust-lang/cargo/issues/4725
       # https://doc.rust-lang.org/cargo/reference/environment-variables.html
@@ -59,7 +63,7 @@ jobs:
           fi
       - run: echo "core_count=$(nproc)" >> $GITHUB_OUTPUT
         id: ga_core_count
-      - run: oxipng --opt max --recursive --preserve --strip safe --alpha --interlace keep --zopfli -t ${{ steps.ga_core_count.outputs.core_count }} ${{ github.workspace }}/pages/public
+      - run: oxipng --opt max --recursive --preserve --strip safe --alpha --interlace keep --zopfli -t ${{ steps.ga_core_count.outputs.core_count }} ${{ github.workspace }}
       - name: Check for Changes
         id: changes
         run: |
@@ -68,12 +72,9 @@ jobs:
           else
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
-      - name: Git Setup
+      - run: git add **/*.png
         if: steps.changes.outputs.changes == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-      - run: git commit -am "Optimized PNGs"
+      - run: git commit -m "Optimized PNGs"
         if: steps.changes.outputs.changes == 'true'
       - run: git push
         if: steps.changes.outputs.changes == 'true'
