@@ -27,7 +27,7 @@ export default component$(() => {
 					<span class="inline-block align-sub text-sm font-bold italic">start</span>
 				</span>
 			</button>
-			<div id="startMenu" class="z-10 hidden w-44">
+			<div id="startMenu" class="z-10 hidden">
 				<Menu />
 			</div>
 		</>

@@ -30,7 +30,7 @@ export default component$<{ empty?: boolean }>(({ empty = false, ...props }) => 
 
 	return (
 		// block h-6 w-full cursor-default px-2 py-1 pr-4 text-xs font-light
-		<li class="block w-full text-black hover:bg-[#316ac5] hover:text-white">
+		<li class="block w-full text-black hover:bg-[#2f71cd] hover:text-white">
 			<button ref={rootButton} class="flex h-6 w-full cursor-default">
 				<Slot name="root" />
 			</button>
