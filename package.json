@@ -42,8 +42,8 @@
 		"@qwikest/icons": "0.0.13"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "1.19.2",
-		"@builder.io/qwik-city": "1.19.2",
+		"@builder.io/qwik": "1.20.0",
+		"@builder.io/qwik-city": "1.20.0",
 		"@demosjarco/prettier-config": "1.0.2",
 		"@eslint/js": "10.0.1",
 		"@microsoft/eslint-formatter-sarif": "3.1.0",
@@ -52,7 +52,7 @@
 		"@types/node": "25.9.1",
 		"eslint": "10.4.1",
 		"eslint-config-prettier": "10.1.8",
-		"eslint-plugin-qwik": "1.19.2",
+		"eslint-plugin-qwik": "1.20.0",
 		"flowbite": "4.0.2",
 		"prettier": "3.8.3",
 		"prettier-plugin-tailwindcss": "0.8.0",
