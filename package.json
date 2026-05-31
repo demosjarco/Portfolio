@@ -42,7 +42,7 @@
 		"@qwikest/icons": "0.0.13"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "1.16.1",
+		"@builder.io/qwik": "1.20.0",
 		"@builder.io/qwik-city": "1.16.1",
 		"@demosjarco/prettier-config": "1.0.2",
 		"@microsoft/eslint-formatter-sarif": "3.1.0",
