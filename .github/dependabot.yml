@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: daily
+      interval: 'weekly'
     open-pull-requests-limit: 999
     groups:
       artifacts:
@@ -18,6 +18,10 @@ updates:
         patterns:
           - 'actions/cache'
           - 'actions/cache/*'
+      ci-cd:
+        patterns:
+          - 'changesets/*'
+          - 'dependabot/*'
       sast:
         patterns:
           - 'github/codeql-*'
@@ -25,15 +29,21 @@ updates:
           - 'step-security/*'
           - 'microsoft/security-devops-action'
           - 'microsoft/DevSkim-Action'
+          - 'ossf/*'
+      setup:
+        patterns:
+          - 'actions/checkout'
+          - 'actions/setup-*'
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: daily
+      interval: 'weekly'
+    cooldown:
+      default-days: 1
+      semver-major-days: 30
+    versioning-strategy: increase
     open-pull-requests-limit: 999
     groups:
-      internal:
-        patterns:
-          - '@demosjarco/*'
       cloudflare:
         patterns:
           - 'cloudflare'
@@ -47,8 +57,12 @@ updates:
           - 'prettier-plugin-*'
           - '@demosjarco/prettier-config'
           - 'eslint'
+          - '@eslint/*'
           - 'eslint-plugin-*'
-          - '@typescript-eslint/*'
+          - 'eslint-config-*'
+          - 'typescript-eslint'
+        exclude-patterns:
+          - 'eslint-plugin-qwik'
       design:
         patterns:
           - '@tailwindcss/*'
@@ -56,19 +70,21 @@ updates:
           - 'flowbite'
           - '@qwikest/icons'
           - '@fontsource/*'
+      qwik:
+        patterns:
+          - '@builder.io/qwik'
+          - '@builder.io/qwik*'
+          - 'eslint-plugin-qwik'
+          - 'vite-*'
+          - '@rollup/plugin-*'
+          - 'rollup-plugin-*'
       typescript-core:
         patterns:
           - 'typescript'
-          - 'ts-node'
-          - '@swc/*'
+          - 'tsx'
       typescript-types:
         patterns:
           - '@types/*'
           - '@cloudflare/workers-types'
           - 'turnstile-types'
           - 'zaraz-ts'
-      qwik:
-        patterns:
-          - '@builder.io/qwik'
-          - '@builder.io/qwik*'
-          - 'vite-*'
