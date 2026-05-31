@@ -1,0 +1,43 @@
+name: Update worker types
+
+on:
+  push:
+    paths:
+      - '.github/workflows/updateWorkersTypes.yml'
+      - 'worker-configuration.d.ts'
+      - 'wrangler.jsonc'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-files:
+    runs-on: ubuntu-latest
+    if: github.actor != 'demosjarco-prettier[bot]'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          disable-sudo-and-containers: true
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Git Setup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: lts/*
+          check-latest: true
+          cache: 'npm'
+      - run: npm ci --ignore-scripts
+      - run: npm run-script install --if-present
+      - run: npm run build.types:cf
+      - run: npm run fmt:fix
+      - run: git add worker-configuration.d.ts
+      - run: git commit -m "Update worker types" || echo "worker types update not needed"
+      - run: git push
