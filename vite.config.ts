@@ -4,11 +4,10 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import type { EnvVars } from './src/types';
 
 // https://developers.cloudflare.com/workers/runtime-apis/nodejs
-const cloudflareNodeRuntimes: `node:${string}`[] = ['node:assert', 'node:async_hooks', 'node:buffer', 'node:crypto', 'node:diagnostics_channel', 'node:events', 'node:path', 'node:process', 'node:stream', 'node:string_decoder', 'node:test', 'node:util'];
-const cloudflareRuntimes: `cloudflare:${string}`[] = ['cloudflare:email'];
+const cloudflareNodeRuntimes: `node:${string}`[] = ['node:assert', 'node:async_hooks', 'node:buffer', 'node:crypto', 'node:diagnostics_channel', 'node:dns', 'node:events', 'node:net', 'node:path', 'node:process', 'node:stream', 'node:string_decoder', 'node:test', 'node:timers', 'node:url', 'node:util', 'node:zlib'];
+const cloudflareRuntimes: `cloudflare:${string}`[] = ['cloudflare:email', 'cloudflare:workers', 'cloudflare:sockets'];
 
 export default defineConfig(() => {
 	return {
@@ -37,7 +36,7 @@ export default defineConfig(() => {
 		},
 		build: {
 			target: 'esnext',
-			sourcemap: (process.env as EnvVars).NODE_ENV !== 'production',
+			sourcemap: true,
 			emptyOutDir: true,
 			rollupOptions: {
 				external: [...cloudflareNodeRuntimes, ...cloudflareRuntimes],
