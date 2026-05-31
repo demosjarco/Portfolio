@@ -1,4 +1,5 @@
 {
+	"type": "module",
 	"scripts": {
 		"fmt": "prettier --check .",
 		"fmt:fix": "prettier --write .",
@@ -17,14 +18,18 @@
 		"url": "https://github.com/demosjarco/Portfolio/issues"
 	},
 	"homepage": "https://github.com/demosjarco/Portfolio#readme",
-	"workspaces": [
-		"pages"
-	],
+	"engines": {
+		"node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+	},
+	"engines-annotation": "Mostly required by sharp which needs a Node-API v9 compatible runtime",
+	"dependencies": {
+		"@fontsource/noto-sans": "5.2.10",
+		"@qwikest/icons": "0.0.13"
+	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20251004.0",
-		"@demosjarco/prettier-config": "^1.0.2",
-		"prettier": "^3.6.2",
-		"typescript": "^5.9.3",
-		"wrangler": "^4.42.0"
+		"@demosjarco/prettier-config": "1.0.2",
+		"prettier": "3.6.2",
+		"prettier-plugin-tailwindcss": "0.6.14",
+		"wrangler": "4.42.0"
 	}
 }
