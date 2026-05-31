@@ -42,7 +42,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run-script install --if-present
       - name: Restore TS cache
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             .tsbuildinfo
@@ -51,7 +51,7 @@ jobs:
             tsc-
           enableCrossOsArchive: true
       - name: Restore server cache
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             server/**
@@ -61,14 +61,14 @@ jobs:
           enableCrossOsArchive: true
       - run: npm run build.types
       - name: Save TS cache
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             .tsbuildinfo
           key: tsc-${{ hashFiles('**/*.tsbuildinfo', '**/package-lock.json') }}
           enableCrossOsArchive: true
       - name: Restore client cache
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             dist/**
@@ -78,7 +78,7 @@ jobs:
         env:
           PUBLIC_GIT_HASH: ${{ github.sha }}
       - name: Save client cache
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             dist/**
@@ -88,7 +88,7 @@ jobs:
         env:
           GIT_HASH: ${{ github.sha }}
       - name: Save server cache
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             server/**
