@@ -16,14 +16,14 @@ export const head: DocumentHead = {
 /**
  * @link https://qwik.dev/docs/middleware/#locale
  */
-export const onRequest: RequestHandler = async ({ locale, request }) => {
+export const onRequest: RequestHandler = ({ locale, request }) => {
 	const acceptLanguage = request.headers.get('accept-language');
-	const [languages] = acceptLanguage?.split(';') || ['?', '?'];
+	const [languages] = acceptLanguage?.split(';') ?? ['?', '?'];
 	const [preferredLanguage] = languages!.split(',');
 	locale(preferredLanguage);
 };
 
-export const onGet: RequestHandler = async ({ cacheControl }) => {
+export const onGet: RequestHandler = ({ cacheControl }) => {
 	// Control caching for this request for best performance and to reduce hosting costs:
 	// https://qwik.dev/docs/caching/
 	cacheControl({

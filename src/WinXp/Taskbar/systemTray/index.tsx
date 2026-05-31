@@ -3,7 +3,7 @@ import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 export default component$(() => {
 	const clockRef = useSignal<HTMLSpanElement>();
 
-	// Must be `useVisibleTask()` because `useTask()` doesn't update on SSG
+	// eslint-disable-next-line @typescript-eslint/unbound-method
 	useVisibleTask$(({ track, cleanup }) => {
 		track(() => clockRef.value);
 

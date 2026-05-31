@@ -7,6 +7,7 @@ export default component$<{ empty?: boolean }>(({ empty = false, ...props }) => 
 	const rootMenuDiv = useSignal<HTMLDivElement>();
 	const rootMenuRef = useSignal<NoSerialize<Dropdown>>();
 
+	// eslint-disable-next-line @typescript-eslint/unbound-method
 	useVisibleTask$(({ track, cleanup }) => {
 		track(() => rootButton.value);
 		track(() => rootMenuDiv.value);
