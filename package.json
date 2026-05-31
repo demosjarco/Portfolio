@@ -1,30 +1,65 @@
 {
+	"type": "module",
 	"scripts": {
+		"build": "qwik build",
+		"build.client": "vite build",
+		"build.preview": "vite build --ssr src/entry.preview.tsx",
+		"build.server": "vite build -c adapters/static/vite.config.ts",
+		"build.types:cf": "wrangler types",
+		"postbuild.types:cf": "prettier --write worker-configuration.d.ts",
+		"build.types:tsc": "tsc --noEmit",
+		"build.types": "npm run build.types:cf && npm run build.types:tsc",
 		"fmt": "prettier --check .",
 		"fmt:fix": "prettier --write .",
 		"lint": "eslint \"**/*.ts*\"",
 		"lint:fix": "npm run lint -- --fix",
-		"preclean": "npx -y rimraf@latest --glob ./**/.wrangler",
-		"clean": "npm -w pages run clean"
+		"preview": "qwik build preview && vite preview --open",
+		"preview:lhci": "qwik build preview && vite preview --port 8080",
+		"preclean": "npx -y rimraf@latest --glob ./**/.wrangler ./**/*.tsbuildinfo",
+		"clean": "npx -y rimraf@latest --glob \"./dist/!(api)\" \"./dist/.[!.]*\" \"./dist/..?*\" ./server ./tmp",
+		"dev": "node --inspect=127.0.0.1:9229 ../../node_modules/vite/bin/vite.js --mode ssr --port 5173 --force",
+		"start:clean": "npm run clean && npm run start",
+		"start": "vite --mode ssr",
+		"qwik": "qwik"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/demosjarco/Portfolio.git"
 	},
+	"author": "DemosJarco <1209494+demosjarco@users.noreply.github.com>",
 	"license": "Apache-2.0",
 	"private": true,
 	"bugs": {
 		"url": "https://github.com/demosjarco/Portfolio/issues"
 	},
 	"homepage": "https://github.com/demosjarco/Portfolio#readme",
-	"workspaces": [
-		"pages"
-	],
+	"engines": {
+		"node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+	},
+	"engines-annotation": "Mostly required by sharp which needs a Node-API v9 compatible runtime",
+	"dependencies": {
+		"@fontsource/noto-sans": "5.2.10",
+		"@qwikest/icons": "0.0.13"
+	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20251004.0",
-		"@demosjarco/prettier-config": "^1.0.2",
-		"prettier": "^3.6.2",
-		"typescript": "^5.9.3",
-		"wrangler": "^4.42.0"
+		"@builder.io/qwik": "1.20.0",
+		"@builder.io/qwik-city": "1.20.0",
+		"@demosjarco/prettier-config": "1.0.2",
+		"@eslint/js": "10.0.1",
+		"@microsoft/eslint-formatter-sarif": "3.1.0",
+		"@rollup/plugin-node-resolve": "16.0.3",
+		"@tailwindcss/vite": "4.3.0",
+		"@types/node": "25.9.1",
+		"eslint": "10.4.1",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-plugin-qwik": "1.20.0",
+		"flowbite": "4.0.2",
+		"prettier": "3.8.3",
+		"prettier-plugin-tailwindcss": "0.8.0",
+		"tailwindcss": "4.3.0",
+		"typescript": "6.0.3",
+		"typescript-eslint": "8.60.0",
+		"vite-tsconfig-paths": "6.1.1",
+		"wrangler": "4.95.0"
 	}
 }

@@ -89,7 +89,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -103,6 +102,12 @@ dist
 # vuepress v2.x temp and cache directory
 .temp
 .cache
+
+# vitepress build output
+**/.vitepress/dist
+
+# vitepress cache directory
+**/.vitepress/cache
 
 # Docusaurus cache and generated files
 .docusaurus
@@ -129,20 +134,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# Build
-/pages/dist
-/pages/lib
-/pages/lib-types
-/pages/server
-
 # Development
-*.local
-
-# Cache
-.mf
-.rollup.cache
-tsconfig.tsbuildinfo
-
 .idea
 .DS_Store
 *.suo
@@ -150,8 +142,15 @@ tsconfig.tsbuildinfo
 *.njsproj
 *.sln
 *.sw?
+*.local
+stats.html
+
+# Cache
+.mf
+.rollup.cache
+/server
+*.tsbuildinfo
 
 # Cloudflare
-functions/**/*.js
 .wrangler
 .dev.vars
