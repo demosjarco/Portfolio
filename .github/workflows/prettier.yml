@@ -42,21 +42,26 @@ permissions:
 
 jobs:
   prettier:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
+          disable-sudo-and-containers: true
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-          disable-sudo: true
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Git Setup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: lts/*
           check-latest: true
           cache: 'npm'
-      - run: npm install -D prettier @demosjarco/prettier-config
+      - run: npm ci --ignore-scripts
+      - run: npm run-script install --if-present
       - run: npm run fmt:fix
       - name: Check for Changes
         id: changes
@@ -66,17 +71,7 @@ jobs:
           else
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
-      - run: git add --all
-        if: steps.changes.outputs.changes == 'true'
-      - name: Don't touch package files
-        if: steps.changes.outputs.changes == 'true'
-        run: git reset -- package*.json
-      - name: Git Setup
-        if: steps.changes.outputs.changes == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-      - run: git commit -m "Ran formatter"
+      - run: git commit -am "Ran formatter" || echo "No formatting done"
         if: steps.changes.outputs.changes == 'true'
       - run: git push
         if: steps.changes.outputs.changes == 'true'
