@@ -1,8 +1,10 @@
-import { component$, Slot } from '@builder.io/qwik';
+import { component$, Slot, type QRL } from '@builder.io/qwik';
 
 interface BaseAppProps {
 	name: string;
 	href?: string;
+	/** Launch handler for in-OS apps (mutually exclusive with `href`). */
+	onClick$?: QRL<() => void>;
 }
 interface DefaultAppProps extends BaseAppProps {
 	type: string;
@@ -33,6 +35,10 @@ export default component$<DefaultAppProps | RecentAppsProps>((props) => {
 				<a href={props.href} target="_blank" referrerPolicy="no-referrer" class="flex cursor-default p-1 text-inherit no-underline">
 					{inner}
 				</a>
+			) : props.onClick$ ? (
+				<button type="button" onClick$={props.onClick$} class="flex w-full cursor-default p-1 text-left">
+					{inner}
+				</button>
 			) : (
 				<div class="flex p-1">{inner}</div>
 			)}

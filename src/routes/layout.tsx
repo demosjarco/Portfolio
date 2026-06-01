@@ -1,7 +1,7 @@
-import { component$, Slot, useContextProvider, useSignal } from '@builder.io/qwik';
+import { component$, Slot, useContextProvider, useSignal, useStore } from '@builder.io/qwik';
 import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
-import { IconStateContext, PowerStateContext, WallpaperContext } from '../contexts';
-import { defaultIconState, defaultState } from '../contexts/signals';
+import { IconStateContext, PowerStateContext, WallpaperContext, WindowManagerContext } from '../contexts';
+import { defaultIconState, defaultState, defaultWindowManagerState } from '../contexts/signals';
 
 export const head: DocumentHead = {
 	title: 'DemosJarco Portfolio',
@@ -36,21 +36,11 @@ export const onGet: RequestHandler = ({ cacheControl }) => {
 
 export default component$(() => {
 	// Setup contexts
-	/**
-	 * @todo apps
-	 */
-	/**
-	 * @todo next app id
-	 */
-	/**
-	 * @todo next z index
-	 */
 	useContextProvider(WallpaperContext, useSignal());
 	useContextProvider(IconStateContext, useSignal(defaultIconState));
-	/**
-	 * @todo selecting
-	 */
 	useContextProvider(PowerStateContext, useSignal(defaultState));
+	// Desktop Window Manager store (running windows, focus, z-index)
+	useContextProvider(WindowManagerContext, useStore(structuredClone(defaultWindowManagerState), { deep: true }));
 
 	// UI
 	return <Slot />;
