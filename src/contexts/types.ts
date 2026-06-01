@@ -1,5 +1,3 @@
-import type { JSXOutput } from '@builder.io/qwik';
-
 export enum Wallpapers {
 	// New
 	'Nostalgic Solitaire',
@@ -50,14 +48,64 @@ export enum PowerState {
 	turnOff,
 }
 
-export type IconStates = IconState[];
-interface IconState {
+/**
+ * Stable identifier for every application the desktop knows how to launch.
+ * Used as the lookup key into the app registry ({@link appRegistry}) so that
+ * non-serializable data (JSX icons, content components) can live outside the
+ * window-manager store.
+ */
+export enum AppKey {
+	SecurityEssentials = 'SecurityEssentials',
+}
+
+/**
+ * What the desktop currently considers "active". Mirrors the real XP behaviour
+ * where focus can live on a window, a desktop icon, or the bare desktop.
+ */
+export enum Focusing {
+	window = 'window',
+	icon = 'icon',
+	desktop = 'desktop',
+}
+
+/**
+ * A single running window. Only serializable data lives here — the icon and
+ * content component are resolved from {@link appRegistry} via {@link AppKey}.
+ */
+export interface AppInstance {
 	id: number;
-	icon: JSXOutput;
+	appKey: AppKey;
 	title: string;
-	/**
-	 * @todo
-	 */
-	component: any;
+	zIndex: number;
+	minimized: boolean;
+	maximized: boolean;
+	/** Top-left position (px) relative to the desktop, when not maximized. */
+	x: number;
+	y: number;
+	/** Size (px) when not maximized. */
+	width: number;
+	height: number;
+}
+
+/**
+ * The complete reactive state for the Desktop Window Manager (DWM).
+ * Held in a Qwik store and mutated directly by the action helpers in
+ * `WinXp/dwm/actions.ts`.
+ */
+export interface WindowManagerState {
+	apps: AppInstance[];
+	/** Monotonic id handed to the next launched window. */
+	nextAppId: number;
+	/** Monotonic z-index handed to the next focused window. */
+	nextZIndex: number;
+	/** Whether focus currently lives on a window, an icon, or the desktop. */
+	focusing: Focusing;
+}
+
+export type IconStates = IconState[];
+export interface IconState {
+	id: number;
+	appKey: AppKey;
+	title: string;
 	isFocus: boolean;
 }
