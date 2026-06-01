@@ -3,6 +3,7 @@ import '@fontsource/noto-sans';
 import { PowerStateContext } from '../contexts';
 import { PowerState } from '../contexts/types';
 import Background from './background';
+import IconsContainer from './Icons/IconsContainer';
 import Taskbar from './Taskbar';
 import Wdm from './wdm';
 
@@ -28,6 +29,7 @@ export default component$(() => {
 				},
 			]}>
 			<Background />
+			<IconsContainer />
 			<Wdm />
 			<Taskbar />
 		</div>
