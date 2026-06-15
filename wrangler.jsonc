@@ -15,6 +15,7 @@
 	"vars": {
 		"NODE_ENV": "production"
 	},
+	"secrets": { "required": [] },
 	"assets": {
 		"directory": "./dist"
 	}
