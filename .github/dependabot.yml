@@ -75,6 +75,9 @@ updates:
           - 'typescript-eslint'
         exclude-patterns:
           - 'eslint-plugin-qwik'
+      db:
+        patterns:
+          - 'drizzle-*'
       design:
         patterns:
           - '@tailwindcss/*'

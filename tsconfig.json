@@ -113,5 +113,5 @@
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
 	"files": ["./prettier.config.mjs", "eslint.config.mjs"],
-	"include": ["src", "adapters", "./*.d.ts", "./*.config.ts"]
+	"include": ["src", "adapters", "db", "./*.d.ts", "./*.config.ts"]
 }
