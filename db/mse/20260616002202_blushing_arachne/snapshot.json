@@ -1,0 +1,122 @@
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"id": "e1f1565b-6274-4d39-a272-28bed14f5ca9",
+	"prevIds": ["00000000-0000-0000-0000-000000000000"],
+	"ddl": [
+		{
+			"name": "events",
+			"entityType": "tables"
+		},
+		{
+			"type": "blob",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "ray_id",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"type": "blob",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "rule_id",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "match_index",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "b_time",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "threat_name",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "status",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"columns": ["rule_id", "match_index", "ray_id"],
+			"nameExplicit": false,
+			"name": "events_pk",
+			"entityType": "pks",
+			"table": "events"
+		},
+		{
+			"columns": [
+				{
+					"value": "ray_id",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "events_ray_id",
+			"entityType": "indexes",
+			"table": "events"
+		},
+		{
+			"columns": [
+				{
+					"value": "b_time",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "events_b_time",
+			"entityType": "indexes",
+			"table": "events"
+		},
+		{
+			"columns": [
+				{
+					"value": "threat_name",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "events_threat_name",
+			"entityType": "indexes",
+			"table": "events"
+		}
+	],
+	"renames": []
+}
