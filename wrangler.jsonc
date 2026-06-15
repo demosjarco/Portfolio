@@ -18,5 +18,15 @@
 	"secrets": { "required": [] },
 	"assets": {
 		"directory": "./dist"
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB_MSE",
+			"database_name": "portfolio-mse",
+			"database_id": "59912d5a-9a3f-472d-89a7-9309f7f45f4f",
+			"migrations_dir": "db/mse",
+			"migrations_pattern": "db/mse/*/migration.sql",
+			"remote": true
+		}
+	]
 }
