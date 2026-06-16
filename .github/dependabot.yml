@@ -101,5 +101,6 @@ updates:
         patterns:
           - '@types/*'
           - '@cloudflare/workers-types'
+          - '@graphql-codegen/*'
           - 'turnstile-types'
           - 'zaraz-ts'
