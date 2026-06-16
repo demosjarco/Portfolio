@@ -12,6 +12,8 @@ export const events = snakeCase.table(
 		b_time: e.integer({ mode: 'timestamp_ms' }).notNull(),
 		// MSE style threat name
 		threat_name: e.text({ mode: 'text' }).notNull(),
+		description: e.text({ mode: 'text' }).notNull(),
+		ja3: e.blob({ mode: 'buffer' }),
 		status: e.integer({ mode: 'number' }).notNull().$type<MSEStatus>(),
 	}),
 	(e) => [
