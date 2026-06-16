@@ -4,6 +4,8 @@ CREATE TABLE `events` (
 	`match_index` integer NOT NULL,
 	`b_time` integer NOT NULL,
 	`threat_name` text NOT NULL,
+	`description` text NOT NULL,
+	`ja3` blob,
 	`status` integer NOT NULL,
 	CONSTRAINT `events_pk` PRIMARY KEY(`rule_id`, `match_index`, `ray_id`)
 ) WITHOUT ROWID, STRICT;
