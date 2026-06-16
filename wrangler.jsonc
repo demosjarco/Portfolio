@@ -3,7 +3,7 @@
 	"name": "demosjarco-portfolio",
 	"main": "src/entry.cloudflare-workers.ts",
 	"compatibility_date": "2026-05-26",
-	"compatibility_flags": ["nodejs_compat", "no_nodejs_compat_v2", "global_fetch_strictly_public", "enable_request_signal", "request_signal_passthrough"],
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public", "enable_request_signal", "request_signal_passthrough"],
 	"workers_dev": false,
 	"preview_urls": false,
 	"route": { "pattern": "demosjarco.dev", "custom_domain": true },
