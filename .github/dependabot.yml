@@ -85,6 +85,12 @@ updates:
           - 'flowbite'
           - '@qwikest/icons'
           - '@fontsource/*'
+      hono:
+        patterns:
+          - 'hono'
+          - '@hono/*'
+          - '@scalar/hono-api-reference'
+          - '@scalar/openapi-to-markdown'
       qwik:
         patterns:
           - '@builder.io/qwik'
