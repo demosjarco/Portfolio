@@ -59,6 +59,26 @@
 			"table": "events"
 		},
 		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "description",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
+			"type": "blob",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "ja3",
+			"entityType": "columns",
+			"table": "events"
+		},
+		{
 			"type": "integer",
 			"notNull": true,
 			"autoincrement": false,
