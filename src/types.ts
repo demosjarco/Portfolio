@@ -5,3 +5,5 @@ export interface EnvVars extends Omit<Cloudflare.Env, ''>, TypedBindings {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface TypedBindings {}
+
+export const DB_MSE_D1_ID = '59912d5a-9a3f-472d-89a7-9309f7f45f4f' as const;
