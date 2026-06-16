@@ -8,13 +8,14 @@ import type { ContextVariables, EnvVars } from '~/types';
 import * as mseSchema from '~db/mse/index.js';
 
 const app = new Hono<{ Bindings: EnvVars; Variables: ContextVariables }>();
+const defaultChunkSize = 500 as const;
 
 app.get(
 	'/',
 	zValidator(
 		'query',
 		zm.object({
-			chunkSize: zm._default(zm.coerce.number().check(zm.int(), zm.positive()), 50),
+			firstChunkSize: zm._default(zm.coerce.number().check(zm.int(), zm.positive()), defaultChunkSize),
 		}),
 	),
 	(c) => {
@@ -32,7 +33,7 @@ app.get(
 					.select()
 					.from(mseSchema.events)
 					.where(lastRayId ? lt(mseSchema.events.ray_id, sql`unhex(${typeof lastRayId === 'string' ? lastRayId : lastRayId.toString('hex')})`) : undefined)
-					.limit(validated.chunkSize)
+					.limit(lastRayId ? defaultChunkSize : validated.firstChunkSize)
 					.orderBy(desc(mseSchema.events.b_time));
 
 				for (const row of rows) {
