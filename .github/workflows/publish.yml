@@ -41,6 +41,13 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - run: npm run-script install --if-present
+      - run: npm run build.gql
+        env:
+          CICD_CF_API_TOKEN: ${{ secrets.WORKER_DEPLOY_CF_API_TOKEN }}
+      - run: git add src/gql/graphql.ts
+      - run: git commit -m "Generated gql" || echo "gql files not touched"
+      - run: git push
+        continue-on-error: true
       - name: Restore TS cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
