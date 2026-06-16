@@ -1,4 +1,5 @@
-import { $, component$, type QRL, Slot, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, type QRL, Resource, Slot, useComputed$, useResource$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { isServer } from '@builder.io/qwik/build';
 import { ShieldDanger, ShieldOk, ShieldWarn } from '~/WinXp/apps/SecurityEssentials/StatusIcons';
 
 enum AlertLevel {
@@ -118,66 +119,89 @@ export const HistoryTab = component$(() => {
 	const sortCol = useSignal<SortColumn>('detected');
 	const sortDir = useSignal<'asc' | 'desc'>('desc');
 	const tableContainerRef = useSignal<HTMLDivElement>();
+	const chunkSize = useSignal(20); // fallback until DOM is measured
+	const refetchCounter = useSignal(0); // 0 = awaiting first measurement
 
+	// Measure container height once the DOM is ready, then trigger the first fetch.
+	useVisibleTask$(() => {
+		const container = tableContainerRef.value;
+		if (container) chunkSize.value = Math.max(1, Math.ceil(container.clientHeight / 24));
+		refetchCounter.value = 1;
+	});
+
+	// SSE connection — re-runs on each refetch tick. Side-effects populate `store`.
 	// eslint-disable-next-line @typescript-eslint/unbound-method
-	useVisibleTask$(({ cleanup }) => {
-		let currentEs: EventSource | null = null;
-		let refetchTimer: ReturnType<typeof setTimeout> | null = null;
-		let isFirstLoad = true;
+	useResource$(({ track, cleanup }) => {
+		track(() => refetchCounter.value);
 
-		const connect = () => {
-			selectedId.value = undefined;
+		if (isServer || refetchCounter.value === 0) return;
 
-			const url = new URL('https://demosjarco.dev/api/mse');
-			// First load chunk size is based on the container height to fill the screen, subsequent loads default chunk size
-			if (isFirstLoad && tableContainerRef.value) url.searchParams.set('firstChunkSize', Math.max(1, Math.ceil(tableContainerRef.value.clientHeight / 24)).toString());
-			isFirstLoad = false;
+		selectedId.value = undefined;
 
-			const es = new EventSource(url);
-			currentEs = es;
+		const url = new URL('https://demosjarco.dev/api/mse');
+		url.searchParams.set('chunkSize', chunkSize.value.toString());
 
-			es.addEventListener('message', (evt: MessageEvent) => {
-				const data = JSON.parse(evt.data as string) as MseEventData;
-				const event: DetectionEvent = {
-					id: evt.lastEventId,
-					name: data.threat_name,
-					alertLevel: alertLevelFromThreatName(data.threat_name),
-					detected: new Date(data.b_time),
-					action: statusToAction(data.status),
-					category: categoryFromThreatName(data.threat_name),
-					description: data.description,
-					ja3: data.ja3 ?? null,
-				};
-				const isFirst = Object.keys(store).length === 0;
-				store[event.id] = event;
-				if (isFirst) selectedId.value = event.id;
-			});
+		const buffer: DetectionEvent[] = [];
+		const es = new EventSource(url.toString());
+		let timer: ReturnType<typeof setTimeout> | null = null;
 
-			es.addEventListener('done', () => {
-				es.close();
-				currentEs = null;
-				refetchTimer = setTimeout(connect, 5 * 60 * 1000);
-			});
+		const flushBuffer = () => {
+			if (buffer.length === 0) return;
+			const wasEmpty = Object.keys(store).length === 0;
+			for (const event of buffer.splice(0)) store[event.id] = event;
+			if (wasEmpty) selectedId.value = Object.keys(store)[0];
 		};
 
-		connect();
+		es.addEventListener('message', (evt: MessageEvent) => {
+			const data = JSON.parse(evt.data as string) as MseEventData;
+			buffer.push({
+				id: evt.lastEventId,
+				name: data.threat_name,
+				alertLevel: alertLevelFromThreatName(data.threat_name),
+				detected: new Date(data.b_time),
+				action: statusToAction(data.status),
+				category: categoryFromThreatName(data.threat_name),
+				description: data.description,
+				ja3: data.ja3 ?? null,
+			});
+			if (buffer.length >= chunkSize.value) flushBuffer();
+		});
+
+		es.addEventListener(
+			'done',
+			() => {
+				es.close();
+				flushBuffer();
+				// Re-measure for next refetch
+				const container = tableContainerRef.value;
+				if (container) chunkSize.value = Math.max(1, Math.ceil(container.clientHeight / 24));
+				timer = setTimeout(
+					() => {
+						refetchCounter.value++;
+					},
+					5 * 60 * 1000,
+				);
+			},
+			{ once: true },
+		);
 
 		cleanup(() => {
-			currentEs?.close();
-			if (refetchTimer !== null) clearTimeout(refetchTimer);
-			// Eager delete before garbage collection since this is a large list
-			for (const key of Object.keys(store)) delete store[key];
+			es.close();
+			if (timer !== null) clearTimeout(timer);
 		});
 	});
 
-	const rows = useComputed$<DetectionEvent[]>(() => {
+	const rows = useResource$(({ track }) => {
+		track(() => Object.keys(store));
+		const col = track(() => sortCol.value);
+		track(() => sortDir.value);
+		track(() => filter.value);
+
 		const all = Object.values(store);
-		const col = sortCol.value;
-		const dir = sortDir.value;
 		const alertOrder: Record<AlertLevel, number> = { [AlertLevel.severe]: 3, [AlertLevel.high]: 2, [AlertLevel.medium]: 1, [AlertLevel.low]: 0 };
 		all.sort((a, b) => {
 			const cmp = col === 'name' ? a.name.localeCompare(b.name) : col === 'alertLevel' ? alertOrder[a.alertLevel] - alertOrder[b.alertLevel] : col === 'detected' ? a.detected.getTime() - b.detected.getTime() : a.action.localeCompare(b.action);
-			return dir === 'asc' ? cmp : -cmp;
+			return sortDir.value === 'asc' ? cmp : -cmp;
 		});
 		switch (filter.value) {
 			case 'quarantined':
@@ -269,35 +293,56 @@ export const HistoryTab = component$(() => {
 						</tr>
 					</thead>
 					<tbody>
-						{rows.value.map((e) => {
-							const isSel = e.id === selectedId.value;
-							return (
-								<tr
-									key={e.id}
-									onClick$={$(() => {
-										selectedId.value = e.id;
-									})}
-									class={['cursor-default border-b border-[#eef3f9]', isSel ? 'bg-[#2f71cd] text-white' : 'hover:bg-[#dcebfb]']}>
-									<Td>
-										<AlertIcon level={e.alertLevel} />
+						<Resource
+							value={rows}
+							onPending={() => (
+								<tr>
+									<Td class="text-[#777]" colSpan={5}>
+										Loading...
 									</Td>
-									<Td class="font-bold">
-										{e.name}
-										{e.ja3 && <div class={['font-normal', isSel ? 'text-[rgba(255,255,255,0.7)]' : 'text-[#888]']}>{e.ja3}</div>}
-									</Td>
-									<Td>{e.alertLevel}</Td>
-									<Td>{formatWhen(e.detected)}</Td>
-									<Td>{e.action}</Td>
 								</tr>
-							);
-						})}
-						{rows.value.length === 0 && (
-							<tr>
-								<Td class="text-[#777]" colSpan={5}>
-									No items to display.
-								</Td>
-							</tr>
-						)}
+							)}
+							onRejected={() => (
+								<tr>
+									<Td class="text-[#777]" colSpan={5}>
+										Error loading items.
+									</Td>
+								</tr>
+							)}
+							onResolved={(resolvedRows) => (
+								<>
+									{resolvedRows.map((e) => {
+										const isSel = e.id === selectedId.value;
+										return (
+											<tr
+												key={e.id}
+												onClick$={$(() => {
+													selectedId.value = e.id;
+												})}
+												class={['cursor-default border-b border-[#eef3f9]', isSel ? 'bg-[#2f71cd] text-white' : 'hover:bg-[#dcebfb]']}>
+												<Td>
+													<AlertIcon level={e.alertLevel} />
+												</Td>
+												<Td class="font-bold">
+													{e.name}
+													{e.ja3 && <div class={['font-normal', isSel ? 'text-[rgba(255,255,255,0.7)]' : 'text-[#888]']}>{e.ja3}</div>}
+												</Td>
+												<Td>{e.alertLevel}</Td>
+												<Td>{formatWhen(e.detected)}</Td>
+												<Td>{e.action}</Td>
+											</tr>
+										);
+									})}
+									{resolvedRows.length === 0 && (
+										<tr>
+											<Td class="text-[#777]" colSpan={5}>
+												No items to display.
+											</Td>
+										</tr>
+									)}
+								</>
+							)}
+						/>
 					</tbody>
 				</table>
 			</div>
