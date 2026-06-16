@@ -1,6 +1,72 @@
-import { $, component$, Slot, useComputed$, useSignal } from '@builder.io/qwik';
-import { AlertLevel, DetectionAction, detectionHistory, type DetectionEvent } from '~/WinXp/apps/SecurityEssentials/historyData';
+import { $, component$, type QRL, Slot, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { ShieldDanger, ShieldOk, ShieldWarn } from '~/WinXp/apps/SecurityEssentials/StatusIcons';
+
+enum AlertLevel {
+	severe = 'Severe',
+	high = 'High',
+	medium = 'Medium',
+	low = 'Low',
+}
+
+enum DetectionAction {
+	quarantined = 'Quarantined',
+	removed = 'Removed',
+	blocked = 'Blocked',
+	allowed = 'Allowed',
+}
+
+interface DetectionEvent {
+	id: string;
+	/** Threat name, styled like an MSE signature (Category:Platform/Name). */
+	name: string;
+	alertLevel: AlertLevel;
+	/** Date object for when the item was detected. */
+	detected: Date;
+	action: DetectionAction;
+	/** Extra detail shown when an item is selected. */
+	category: string;
+	description: string;
+	/** JA3 fingerprint hash, if available. Displayed visually only, not used for sorting. */
+	ja3: string | null;
+}
+
+interface MseEventData {
+	b_time: string;
+	threat_name: string;
+	description: string;
+	ja3: string | null;
+	status: number;
+}
+
+type SortColumn = 'name' | 'alertLevel' | 'detected' | 'action';
+
+const statusToAction = (status: number): DetectionAction => {
+	switch (status) {
+		case 0:
+			return DetectionAction.blocked;
+		case 1:
+			return DetectionAction.quarantined;
+		case 2:
+			return DetectionAction.allowed;
+		default:
+			return DetectionAction.blocked;
+	}
+};
+
+const alertLevelFromThreatName = (threatName: string): AlertLevel => {
+	const lc = threatName.toLowerCase();
+	if (lc.startsWith('exploit:')) {
+		if (lc.includes('/injection') || lc.includes('/commandexec') || lc.includes('/ssrf') || lc.includes('/xxe') || lc.includes('/credentialstuffing')) {
+			return AlertLevel.severe;
+		}
+		return AlertLevel.high;
+	}
+	if (lc.startsWith('behavior:')) return AlertLevel.high;
+	if (lc.startsWith('flood:')) return AlertLevel.medium;
+	return AlertLevel.low;
+};
+
+const categoryFromThreatName = (threatName: string): string => threatName.split(':')[0] ?? 'Unknown';
 
 /** Map an alert level to the small status shield shown in the list. */
 const AlertIcon = component$<{ level: AlertLevel }>(({ level }) => {
@@ -15,8 +81,8 @@ const AlertIcon = component$<{ level: AlertLevel }>(({ level }) => {
 	}
 });
 
-const formatWhen = (epoch: number) =>
-	new Date(epoch).toLocaleString(undefined, {
+const formatWhen = (epoch: Date) =>
+	epoch.toLocaleString(undefined, {
 		month: 'numeric',
 		day: 'numeric',
 		year: 'numeric',
@@ -40,17 +106,79 @@ const recommendationFor = (level: AlertLevel): string => {
 /**
  * History tab — the primary surface of this MSE recreation.
  *
- * Lists detected items (currently {@link detectionHistory} dummy data, later
- * live WAF events from the Cloudflare API rendered as on-device security
- * events). Supports the classic MSE filter radios and a detail pane for the
- * selected item.
+ * Lists detected items (live WAF events from the Cloudflare API surfaced as
+ * on-device security events via SSE). Supports the classic MSE filter radios
+ * and a detail pane for the selected item. Polls every 5 minutes after the
+ * initial stream completes.
  */
 export const HistoryTab = component$(() => {
 	const filter = useSignal<'all' | 'quarantined' | 'allowed'>('all');
-	const selectedId = useSignal<string | undefined>(detectionHistory[0]?.id);
+	const selectedId = useSignal<string | undefined>(undefined);
+	const store = useStore<Record<string, DetectionEvent>>({}, { deep: false });
+	const sortCol = useSignal<SortColumn>('detected');
+	const sortDir = useSignal<'asc' | 'desc'>('desc');
+	const tableContainerRef = useSignal<HTMLDivElement>();
+
+	// eslint-disable-next-line @typescript-eslint/unbound-method
+	useVisibleTask$(({ cleanup }) => {
+		let currentEs: EventSource | null = null;
+		let refetchTimer: ReturnType<typeof setTimeout> | null = null;
+		let isFirstLoad = true;
+
+		const connect = () => {
+			selectedId.value = undefined;
+
+			const url = new URL('https://demosjarco.dev/api/mse');
+			// First load chunk size is based on the container height to fill the screen, subsequent loads default chunk size
+			if (isFirstLoad && tableContainerRef.value) url.searchParams.set('firstChunkSize', Math.max(1, Math.ceil(tableContainerRef.value.clientHeight / 24)).toString());
+			isFirstLoad = false;
+
+			const es = new EventSource(url);
+			currentEs = es;
+
+			es.addEventListener('message', (evt: MessageEvent) => {
+				const data = JSON.parse(evt.data as string) as MseEventData;
+				const event: DetectionEvent = {
+					id: evt.lastEventId,
+					name: data.threat_name,
+					alertLevel: alertLevelFromThreatName(data.threat_name),
+					detected: new Date(data.b_time),
+					action: statusToAction(data.status),
+					category: categoryFromThreatName(data.threat_name),
+					description: data.description,
+					ja3: data.ja3 ?? null,
+				};
+				const isFirst = Object.keys(store).length === 0;
+				store[event.id] = event;
+				if (isFirst) selectedId.value = event.id;
+			});
+
+			es.addEventListener('done', () => {
+				es.close();
+				currentEs = null;
+				refetchTimer = setTimeout(connect, 5 * 60 * 1000);
+			});
+		};
+
+		connect();
+
+		cleanup(() => {
+			currentEs?.close();
+			if (refetchTimer !== null) clearTimeout(refetchTimer);
+			// Eager delete before garbage collection since this is a large list
+			for (const key of Object.keys(store)) delete store[key];
+		});
+	});
 
 	const rows = useComputed$<DetectionEvent[]>(() => {
-		const all = [...detectionHistory].sort((a, b) => b.detected - a.detected);
+		const all = Object.values(store);
+		const col = sortCol.value;
+		const dir = sortDir.value;
+		const alertOrder: Record<AlertLevel, number> = { [AlertLevel.severe]: 3, [AlertLevel.high]: 2, [AlertLevel.medium]: 1, [AlertLevel.low]: 0 };
+		all.sort((a, b) => {
+			const cmp = col === 'name' ? a.name.localeCompare(b.name) : col === 'alertLevel' ? alertOrder[a.alertLevel] - alertOrder[b.alertLevel] : col === 'detected' ? a.detected.getTime() - b.detected.getTime() : a.action.localeCompare(b.action);
+			return dir === 'asc' ? cmp : -cmp;
+		});
 		switch (filter.value) {
 			case 'quarantined':
 				return all.filter((e) => e.action === DetectionAction.quarantined || e.action === DetectionAction.removed);
@@ -61,7 +189,8 @@ export const HistoryTab = component$(() => {
 		}
 	});
 
-	const selected = useComputed$(() => detectionHistory.find((e) => e.id === selectedId.value));
+	const selected = useComputed$(() => (selectedId.value !== undefined ? store[selectedId.value] : undefined));
+	const eventCount = useComputed$(() => Object.keys(store).length);
 
 	return (
 		<div class="flex h-full flex-col text-[12px]">
@@ -77,15 +206,66 @@ export const HistoryTab = component$(() => {
 			</div>
 
 			{/* Detected items table */}
-			<div class="mx-4 min-h-0 flex-1 overflow-auto border border-[#c2d5ec] bg-white">
+			<div ref={tableContainerRef} class="mx-4 min-h-0 flex-1 overflow-auto border border-[#c2d5ec] bg-white">
 				<table class="w-full border-collapse">
 					<thead class="sticky top-0 bg-linear-to-b from-[#f4f9ff] to-[#dcebfb] text-left">
 						<tr class="text-[#1b4f8a]">
 							<Th class="w-7"></Th>
-							<Th>Detected item</Th>
-							<Th class="w-24">Alert level</Th>
-							<Th class="w-40">Date</Th>
-							<Th class="w-24">Action taken</Th>
+							<Th
+								sortKey="name"
+								sortCol={sortCol.value}
+								sortDir={sortDir.value}
+								onClick$={$(() => {
+									if (sortCol.value === 'name') sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc';
+									else {
+										sortCol.value = 'name';
+										sortDir.value = 'asc';
+									}
+								})}>
+								Detected item
+							</Th>
+							<Th
+								class="w-24"
+								sortKey="alertLevel"
+								sortCol={sortCol.value}
+								sortDir={sortDir.value}
+								onClick$={$(() => {
+									if (sortCol.value === 'alertLevel') sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc';
+									else {
+										sortCol.value = 'alertLevel';
+										sortDir.value = 'asc';
+									}
+								})}>
+								Alert level
+							</Th>
+							<Th
+								class="w-40"
+								sortKey="detected"
+								sortCol={sortCol.value}
+								sortDir={sortDir.value}
+								onClick$={$(() => {
+									if (sortCol.value === 'detected') sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc';
+									else {
+										sortCol.value = 'detected';
+										sortDir.value = 'asc';
+									}
+								})}>
+								Date
+							</Th>
+							<Th
+								class="w-24"
+								sortKey="action"
+								sortCol={sortCol.value}
+								sortDir={sortDir.value}
+								onClick$={$(() => {
+									if (sortCol.value === 'action') sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc';
+									else {
+										sortCol.value = 'action';
+										sortDir.value = 'asc';
+									}
+								})}>
+								Action taken
+							</Th>
 						</tr>
 					</thead>
 					<tbody>
@@ -101,7 +281,10 @@ export const HistoryTab = component$(() => {
 									<Td>
 										<AlertIcon level={e.alertLevel} />
 									</Td>
-									<Td class="font-bold">{e.name}</Td>
+									<Td class="font-bold">
+										{e.name}
+										{e.ja3 && <div class={['font-normal', isSel ? 'text-[rgba(255,255,255,0.7)]' : 'text-[#888]']}>{e.ja3}</div>}
+									</Td>
 									<Td>{e.alertLevel}</Td>
 									<Td>{formatWhen(e.detected)}</Td>
 									<Td>{e.action}</Td>
@@ -135,15 +318,24 @@ export const HistoryTab = component$(() => {
 							<span class="font-bold">Recommendation: </span>
 							<span>{recommendationFor(selected.value.alertLevel)}</span>
 						</div>
+						{selected.value.ja3 && (
+							<div>
+								<span class="font-bold">Hash: </span>
+								<span>{selected.value.ja3}</span>
+							</div>
+						)}
 					</div>
 				</div>
 			)}
 
 			{/* Bottom action bar */}
-			<div class="flex justify-end gap-2 px-4 py-2">
-				<button type="button" class="flex items-center gap-1 rounded-[3px] border border-[#88a4c4] bg-linear-to-b from-[#fdfeff] via-[#eef4fb] to-[#d6e3f2] px-4 py-1 font-bold text-[#1b3a5e] shadow-[inset_0_1px_0_#fff] hover:from-[#eaf3ff] hover:to-[#cfe0f5] active:from-[#cfe0f5] active:to-[#eaf3ff]">
-					Delete history
-				</button>
+			<div class="flex items-center justify-between px-4 py-2">
+				<span class="text-[#555]">{eventCount.value} items detected</span>
+				<div class="flex gap-2">
+					<button type="button" class="flex items-center gap-1 rounded-[3px] border border-[#88a4c4] bg-linear-to-b from-[#fdfeff] via-[#eef4fb] to-[#d6e3f2] px-4 py-1 font-bold text-[#1b3a5e] shadow-[inset_0_1px_0_#fff] hover:from-[#eaf3ff] hover:to-[#cfe0f5] active:from-[#cfe0f5] active:to-[#eaf3ff]">
+						Delete history
+					</button>
+				</div>
 			</div>
 		</div>
 	);
@@ -166,9 +358,10 @@ const FilterRadio = component$<{ current: string; value: 'all' | 'quarantined' |
 	</label>
 ));
 
-const Th = component$<{ class?: string }>(({ class: cls }) => (
-	<th class={['border-b border-[#c2d5ec] px-2 py-1 font-bold', cls]}>
+const Th = component$<{ class?: string; sortKey?: string; sortCol?: string; sortDir?: 'asc' | 'desc'; onClick$?: QRL<() => void> }>(({ class: cls, sortKey, sortCol, sortDir, onClick$ }) => (
+	<th class={['border-b border-[#c2d5ec] px-2 py-1 font-bold', onClick$ ? 'cursor-pointer select-none hover:bg-[#cde]' : '', cls]} onClick$={onClick$}>
 		<Slot />
+		{sortKey && sortCol === sortKey && (sortDir === 'asc' ? ' ▲' : ' ▼')}
 	</th>
 ));
 
