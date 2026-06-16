@@ -154,3 +154,7 @@ stats.html
 # Cloudflare
 .wrangler
 .dev.vars
+dist/*
+!*openapi*.json
+!llms.txt
+!/dist/api

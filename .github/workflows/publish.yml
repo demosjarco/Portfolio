@@ -101,6 +101,8 @@ jobs:
             server/**
           key: qwik-s-${{ hashFiles('src/**', '**/*.tsbuildinfo', '**/package-lock.json') }}
           enableCrossOsArchive: true
+      # Qwik build nukes `dist` folder. Restore back
+      - run: git restore --source=HEAD --worktree --staged -- "dist/api/"
       - run: npm run lint
       - run: echo "wrangler_version=$(npm ls wrangler --depth=0 --json | jq -r '.dependencies.wrangler.version')" >> $GITHUB_OUTPUT
         id: npm_wrangler_version
