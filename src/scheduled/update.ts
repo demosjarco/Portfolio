@@ -1,7 +1,6 @@
 import { cacheExchange, Client, fetchExchange } from '@urql/core';
 import { Cloudflare } from 'cloudflare';
 import type { RulesetGetResponse } from 'cloudflare/resources/rulesets/rulesets.mjs';
-import type { BatchItem } from 'drizzle-orm/batch';
 import { drizzle } from 'drizzle-orm/d1';
 import { DefaultLogger } from 'drizzle-orm/logger';
 import { sql } from 'drizzle-orm/sql';
@@ -171,11 +170,11 @@ export async function scheduled<Props = unknown>(controller: ScheduledController
 
 		const generator = new MseThreatNameGenerator(rulesets);
 		const hexCheck = zm.hex();
-		await db_mse.batch(
-			events.map((event) => {
-				const { mseThreatName, mseStatus } = generator.generate(event);
+		for (const event of events) {
+			const { mseThreatName, mseStatus } = generator.generate(event);
 
-				return db_mse
+			ctx.waitUntil(
+				db_mse
 					.insert(mseSchema.events)
 					.values({
 						ray_id: sql`unhex(${event.rayName})`,
@@ -187,9 +186,28 @@ export async function scheduled<Props = unknown>(controller: ScheduledController
 						ja3: sql`unhex(${event.ja3Hash})`,
 						status: mseStatus,
 					})
-					.onConflictDoNothing();
-			}) as unknown as [BatchItem<'sqlite'>, ...BatchItem<'sqlite'>[]],
-		);
+					.onConflictDoNothing(),
+			);
+		}
+		// await db_mse.batch(
+		// 	events.map((event) => {
+		// 		const { mseThreatName, mseStatus } = generator.generate(event);
+
+		// 		return db_mse
+		// 			.insert(mseSchema.events)
+		// 			.values({
+		// 				ray_id: sql`unhex(${event.rayName})`,
+		// 				rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
+		// 				match_index: event.matchIndex,
+		// 				b_time: new Date(event.datetime),
+		// 				threat_name: mseThreatName,
+		// 				description: event.description,
+		// 				ja3: sql`unhex(${event.ja3Hash})`,
+		// 				status: mseStatus,
+		// 			})
+		// 			.onConflictDoNothing();
+		// 	}) as unknown as [BatchItem<'sqlite'>, ...BatchItem<'sqlite'>[]],
+		// );
 		ctx.waitUntil(env.DB_MSE.withSession('first-unconstrained').prepare('PRAGMA optimize').run());
 	} else {
 		throw error;
