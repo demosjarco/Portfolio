@@ -1,6 +1,6 @@
 import { component$, type Component } from '@builder.io/qwik';
+import MseIcon from '~/assets/windowsIcons/Microsoft_Security_Essentials_icon.png?w=16&h=16&jsx';
 import { AppKey } from '~/contexts/types';
-import MseIcon from '~/assets/windowsIcons/MSEInstall_101-6.png?w=16&h=16&jsx';
 import { SecurityEssentials } from './SecurityEssentials';
 
 /**
