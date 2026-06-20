@@ -1,8 +1,8 @@
 import { $, component$, useContext } from '@builder.io/qwik';
+import MseIcon from '~/assets/windowsIcons/Microsoft_Security_Essentials_icon.png?w=32&h=32&jsx';
 import { IconStateContext, WindowManagerContext } from '../../contexts';
 import type { IconState } from '../../contexts/types';
 import { launchApp } from '../dwm/actions';
-import MseIcon from '~/assets/windowsIcons/MSEInstall_101-6.png?w=32&h=32&jsx';
 
 /**
  * A desktop icon. Single click selects (highlight), double click launches the

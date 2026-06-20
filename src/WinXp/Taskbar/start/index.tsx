@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import XpLogo from '~/assets/xp.svg?jsx';
+import XpLogo from '~/assets/xp.svg?w=23&h=20&jsx';
 import Menu from './menu';
 
 export default component$(() => {
