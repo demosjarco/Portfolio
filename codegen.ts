@@ -10,7 +10,7 @@ export default {
 			},
 		},
 	},
-	documents: ['src/scheduled/update.ts'],
+	documents: ['wf/*.ts'],
 	emitLegacyCommonJSImports: false,
 	generates: {
 		'./src/gql/': {

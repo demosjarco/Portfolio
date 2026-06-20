@@ -10,6 +10,7 @@ on:
       - 'db/**'
       - 'public/**'
       - 'src/**'
+      - 'wf/**'
       - '*.config.*js'
       - '*.config.*ts'
       - 'wrangler.jsonc'
@@ -29,6 +30,8 @@ jobs:
     environment:
       name: ${{ github.ref_name }}
       url: https://demosjarco.dev
+    permissions:
+      contents: write
     steps:
       - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
         with:

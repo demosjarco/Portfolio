@@ -12,14 +12,6 @@
 	"upload_source_maps": true,
 	"observability": { "logs": { "enabled": true }, "traces": { "enabled": true } },
 	"limits": { "cpu_ms": 30000, "subrequests": 10000000 },
-	"triggers": {
-		"crons": [
-			// Update cf data
-			"*/5 * * * *",
-			// Cleanup
-			"0 * * * *"
-		]
-	},
 	"vars": {
 		"NODE_ENV": "production",
 		// 1 hour * 60 minutes * 60 seconds
@@ -38,6 +30,22 @@
 			"migrations_dir": "db/mse",
 			"migrations_pattern": "db/mse/*/migration.sql",
 			"remote": true
+		}
+	],
+	"workflows": [
+		{
+			"name": "portfolio-update-waf",
+			"binding": "UPDATE_WAF",
+			"class_name": "UpdateWaf",
+			"limits": { "steps": 25000 },
+			"schedules": ["*/5 * * * *"]
+		},
+		{
+			"name": "portfolio-cleanup",
+			"binding": "CLEANUP",
+			"class_name": "Cleanup",
+			"limits": { "steps": 25000 },
+			"schedules": ["0 * * * *"]
 		}
 	]
 }
