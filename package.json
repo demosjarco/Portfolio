@@ -9,9 +9,8 @@
 		"postbuild.types:cf": "prettier --write worker-configuration.d.ts",
 		"build.types:tsc": "tsc --noEmit",
 		"build.types": "npm run build.types:cf && npm run build.types:tsc",
-		"build:db": "npm run build:db:mse",
-		"build:db:mse": "drizzle-kit generate --dialect=sqlite --driver d1-http --schema=\"db/mse/index.ts\" --out=\"db/mse/\"",
-		"postbuild:db:mse": "prettier --write db/mse",
+		"build:db": "drizzle-kit generate --dialect=sqlite --driver d1-http --schema=\"db/index.ts\" --out=\"db\"",
+		"postbuild:db": "prettier --write db",
 		"build.gql": "graphql-codegen-esm --config codegen.ts",
 		"postbuild.gql": "prettier --write ./src/gql",
 		"fmt": "prettier --check .",
@@ -27,8 +26,7 @@
 		"start": "vite --mode ssr",
 		"api": "wrangler dev --test-scheduled",
 		"qwik": "qwik",
-		"publish:db": "npm run publish:db:mse",
-		"publish:db:mse": "wrangler d1 migrations apply --remote DB_MSE"
+		"publish:db": "wrangler d1 migrations apply --remote DB"
 	},
 	"repository": {
 		"type": "git",
