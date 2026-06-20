@@ -52,7 +52,7 @@
 		"@urql/core": "6.0.2",
 		"cloudflare": "6.4.0",
 		"drizzle-orm": "1.0.0-rc.3",
-		"hono": "4.12.25",
+		"hono": "4.12.26",
 		"zod": "4.4.3"
 	},
 	"devDependencies": {
