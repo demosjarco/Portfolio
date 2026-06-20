@@ -77,6 +77,6 @@
 		"typescript": "6.0.3",
 		"typescript-eslint": "8.61.1",
 		"vite-tsconfig-paths": "6.1.1",
-		"wrangler": "4.100.0"
+		"wrangler": "4.103.0"
 	}
 }
