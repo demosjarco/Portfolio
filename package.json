@@ -49,7 +49,7 @@
 		"@fontsource/noto-sans": "5.2.10",
 		"@hono/zod-validator": "0.8.0",
 		"@qwikest/icons": "0.0.13",
-		"@urql/core": "6.0.1",
+		"@urql/core": "6.0.2",
 		"cloudflare": "6.4.0",
 		"drizzle-orm": "1.0.0-rc.3",
 		"hono": "4.12.25",
