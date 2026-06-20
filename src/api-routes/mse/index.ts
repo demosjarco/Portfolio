@@ -5,7 +5,7 @@ import { streamSSE } from 'hono/streaming';
 import { Buffer } from 'node:buffer';
 import * as zm from 'zod/mini';
 import type { ContextVariables, EnvVars } from '~/types';
-import * as mseSchema from '~db/mse/index.js';
+import * as schema from '~db/index.js';
 
 const app = new Hono<{ Bindings: EnvVars; Variables: ContextVariables }>();
 
@@ -24,16 +24,16 @@ app.get(
 			let lastRayId: Buffer | string | undefined;
 
 			// Single upfront count; subtract after each batch to avoid a second query per loop
-			const [countRow] = await c.var.db_mse.select({ count: count() }).from(mseSchema.events);
+			const [countRow] = await c.var.db.select({ count: count() }).from(schema.waf_events);
 			let remaining = countRow?.count ?? 0;
 
 			while (remaining > 0 && !stream.aborted && !stream.closed) {
-				const rows = await c.var.db_mse
+				const rows = await c.var.db
 					.select()
-					.from(mseSchema.events)
-					.where(lastRayId ? lt(mseSchema.events.ray_id, sql`unhex(${typeof lastRayId === 'string' ? lastRayId : lastRayId.toString('hex')})`) : undefined)
+					.from(schema.waf_events)
+					.where(lastRayId ? lt(schema.waf_events.ray_id, sql`unhex(${typeof lastRayId === 'string' ? lastRayId : lastRayId.toString('hex')})`) : undefined)
 					.limit(validated.chunkSize)
-					.orderBy(desc(mseSchema.events.b_time));
+					.orderBy(desc(schema.waf_events.b_time));
 
 				for (const row of rows) {
 					await stream.writeSSE({
@@ -59,7 +59,7 @@ app.get(
 			}
 
 			// `EventSource` doesn't have `onclose` or similar, so termination of connection is assumed to be error. Send good close message to allow clean exit on client side.
-			await stream.writeSSE({ event: 'done', data: c.var.db_mseSession.getBookmark() ?? '' });
+			await stream.writeSSE({ event: 'done', data: c.var.dbSession.getBookmark() ?? '' });
 			await stream.close();
 		});
 	},

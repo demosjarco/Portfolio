@@ -9,10 +9,10 @@ import { createHash } from 'node:crypto';
 import * as zm from 'zod/mini';
 import type { EventsQuery } from '~/gql/graphql';
 import { graphql } from '~/gql/index.js';
-import { DB_MSE_D1_ID, type EnvVars } from '~/types';
+import { DB_D1_ID, type EnvVars } from '~/types';
 import { SQLCache } from '~/utils/sqlCache';
-import * as mseSchema from '~db/mse/index.js';
-import { MSEStatus } from '~db/mse/types';
+import * as schema from '~db/index.js';
+import { MSEStatus } from '~db/types';
 
 const updateWafParams = zm.object({
 	/**
@@ -33,10 +33,10 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 			}),
 		);
 
-		const db_mse = drizzle(this.env.DB_MSE.withSession('first-unconstrained'), {
-			schema: mseSchema,
+		const db = drizzle(this.env.DB.withSession('first-unconstrained'), {
+			schema,
 			cache: new SQLCache({
-				dbName: DB_MSE_D1_ID,
+				dbName: DB_D1_ID,
 				dbType: 'd1',
 				cacheTTL: parseInt(this.env.SQL_TTL, 10),
 				strategy: 'explicit',
@@ -44,11 +44,11 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 		});
 
 		const maxTime = await step.do('Get newest saved event', async () => {
-			const [row] = await db_mse
+			const [row] = await db
 				.select({
-					maxTime: sql<number | null>`max(${mseSchema.events.b_time})`,
+					maxTime: sql<number | null>`max(${schema.waf_events.b_time})`,
 				})
-				.from(mseSchema.events);
+				.from(schema.waf_events);
 
 			return row?.maxTime ?? 0;
 		});
@@ -205,15 +205,15 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 		const generator = new MseThreatNameGenerator(rulesets);
 		const hexCheck = zm.hex();
 		await step.do('Insert events into database', async () =>
-			db_mse
+			db
 				.batch([
 					// Batch types needs at least 1 guaranteed query, so we do the first insert separately and then `map()` the rest
 					(() => {
 						const event = events[0]!;
 						const { mseThreatName, mseStatus } = generator.generate(event);
 
-						return db_mse
-							.insert(mseSchema.events)
+						return db
+							.insert(schema.waf_events)
 							.values({
 								ray_id: sql`unhex(${event.rayName})`,
 								rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
@@ -229,8 +229,8 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 					...events.slice(1).map((event) => {
 						const { mseThreatName, mseStatus } = generator.generate(event);
 
-						return db_mse
-							.insert(mseSchema.events)
+						return db
+							.insert(schema.waf_events)
 							.values({
 								ray_id: sql`unhex(${event.rayName})`,
 								rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
@@ -263,7 +263,7 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 		);
 
 		await step.do('Optimize database', () =>
-			this.env.DB_MSE.withSession('first-unconstrained')
+			this.env.DB.withSession('first-unconstrained')
 				.prepare('PRAGMA optimize')
 				.run()
 				.then((result) => {
