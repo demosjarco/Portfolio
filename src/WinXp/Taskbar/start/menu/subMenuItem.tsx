@@ -1,5 +1,5 @@
 import { component$, Slot, type ClassList } from '@builder.io/qwik';
-import Folder from '~/assets/windowsIcons/shell32_37-6.png?jsx';
+import Folder from '~/assets/windowsIcons/shell32_37-6.png?w=16&h=16&jsx';
 
 export default component$<{ folder?: boolean; name: string; href?: string }>(({ folder = false, ...props }) => {
 	const rootClasses: ClassList = 'block h-6 w-full cursor-default px-2 py-1 pr-4 text-xs font-light';
