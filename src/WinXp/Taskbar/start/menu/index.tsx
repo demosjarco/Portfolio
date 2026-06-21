@@ -4,6 +4,7 @@ import IeExplore from '~/assets/windowsIcons/iexplore_7-8.png?w=32&h=32&jsx';
 import MseIcon from '~/assets/windowsIcons/Microsoft_Security_Essentials_icon.png?w=32&h=32&jsx';
 import ProgramDefaults from '~/assets/windowsIcons/moricons_1_114-8.png?w=24&h=24&jsx';
 import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-6.png?w=32&h=32&jsx';
+import MessengerIcon from '~/assets/windowsIcons/msmsgs_1_1-6.png?w=32&h=32&jsx';
 import ControlPanel from '~/assets/windowsIcons/shell32_1_137-2.png?w=24&h=24&jsx';
 import PrintersAndFaxes from '~/assets/windowsIcons/shell32_1_138-5.png?w=24&h=24&jsx';
 import Search from '~/assets/windowsIcons/shell32_1_23-8.png?w=24&h=24&jsx';
@@ -68,6 +69,9 @@ export default component$(() => {
 						{/* Frequently used programs */}
 						<Item name="Microsoft Security Essentials" onClick$={$(() => launchApp(wm, AppKey.SecurityEssentials))}>
 							<MseIcon class="h-8 w-8" />
+						</Item>
+						<Item name="Windows Messenger" onClick$={$(() => launchApp(wm, AppKey.Messenger))}>
+							<MessengerIcon class="h-8 w-8" />
 						</Item>
 						<li class="grow"></li>
 						<Separator />

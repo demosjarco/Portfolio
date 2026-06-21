@@ -252,8 +252,9 @@ class CSPGenerator {
 
 	private setupCSP() {
 		this.addDefault({ self: true });
-		this.addScript({ self: true, nonce: true, unsafeEval: true, domains: [new URL('https://static.cloudflareinsights.com').origin] });
+		this.addScript({ self: true, nonce: true, unsafeEval: true, domains: [new URL('https://static.cloudflareinsights.com').origin, new URL('https://challenges.cloudflare.com').origin] });
 		this.addConnect({ self: true, domains: [new URL('https://cloudflareinsights.com').origin] });
+		this.addFrame({ self: true, domains: [new URL('https://challenges.cloudflare.com').origin] });
 		this.addStyle({ self: true, unsafeInline: true });
 		this.addImage({ self: true, blob: true, all: true });
 		this.addUpgradeInsecureRequests();
