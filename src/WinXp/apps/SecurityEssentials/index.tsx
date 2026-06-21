@@ -1,4 +1,5 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
+import type { AppInstance } from '~/contexts/types';
 import { HistoryTab } from './tabs/HistoryTab';
 import { HomeTab } from './tabs/HomeTab';
 import { SettingsTab } from './tabs/SettingsTab';
@@ -14,7 +15,7 @@ type Tab = (typeof TABS)[number];
  * registry). Renders the classic four-tab MSE layout; the History tab is the
  * primary surface and will later be backed by live WAF data.
  */
-export const SecurityEssentials = component$(() => {
+export const SecurityEssentials = component$<{ app?: AppInstance }>(() => {
 	const activeTab = useSignal<Tab>('History');
 
 	return (

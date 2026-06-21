@@ -8,6 +8,9 @@ import { DB_D1_ID, type ContextVariables, type EnvVars } from '~/types';
 import { SQLCache } from '~/utils/sqlCache';
 import * as schema from '~db/index.js';
 
+// Re-export Durable Objects since workerd can only find from from `wrangler.jsonc`'s `main` file
+export { Chatroom } from '~do/Chatroom.js';
+
 // Re-export Workflows since workerd can only find from from `wrangler.jsonc`'s `main` file
 export { Cleanup } from '~wf/cleanup.js';
 export { UpdateWaf } from '~wf/updateWaf.js';

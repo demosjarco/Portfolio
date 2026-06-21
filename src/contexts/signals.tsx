@@ -7,6 +7,12 @@ export const defaultIconState: IconStates = [
 		title: 'Microsoft Security Essentials',
 		isFocus: false,
 	},
+	{
+		id: 1,
+		appKey: AppKey.Messenger,
+		title: 'Windows Messenger',
+		isFocus: false,
+	},
 ];
 export const defaultState: PowerState = PowerState.start;
 

@@ -1,7 +1,7 @@
 import { component$, Slot, useContextProvider, useSignal, useStore } from '@builder.io/qwik';
-import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
-import { IconStateContext, PowerStateContext, WallpaperContext, WindowManagerContext } from '../contexts';
 import { defaultIconState, defaultState, defaultWindowManagerState } from '../contexts/signals';
+import { type DocumentHead, type RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
+import { IconStateContext, PowerStateContext, TurnstileSiteKeyContext, WallpaperContext, WindowManagerContext } from '~/contexts';
 
 export const head: DocumentHead = {
 	title: 'DemosJarco Portfolio',
@@ -34,6 +34,14 @@ export const onGet: RequestHandler = ({ cacheControl }) => {
 	});
 };
 
+/**
+ * Dummy keys:
+ * 1x00000000000000000000AA - test key to always pass (visible)
+ * 1x00000000000000000000BB - test key to always pass (invisible)
+ * 3x00000000000000000000FF - test key to always force interactive challenge
+ */
+export const useTurnstileSiteKey = routeLoader$(({ env }) => env.get('TURNSTILE_SITE_KEY')!);
+
 export default component$(() => {
 	// Setup contexts
 	useContextProvider(WallpaperContext, useSignal());
@@ -41,6 +49,8 @@ export default component$(() => {
 	useContextProvider(PowerStateContext, useSignal(defaultState));
 	// Desktop Window Manager store (running windows, focus, z-index)
 	useContextProvider(WindowManagerContext, useStore(structuredClone(defaultWindowManagerState), { deep: true }));
+	// SSG-hardcoded Turnstile site key for the messenger room creator
+	useContextProvider(TurnstileSiteKeyContext, useTurnstileSiteKey());
 
 	// UI
 	return <Slot />;
