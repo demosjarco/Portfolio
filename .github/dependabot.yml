@@ -91,6 +91,10 @@ updates:
           - '@hono/*'
           - '@scalar/hono-api-reference'
           - '@scalar/openapi-to-markdown'
+      markdown:
+        patterns:
+          - 'dompurify'
+          - 'marked'
       qwik:
         patterns:
           - '@builder.io/qwik'

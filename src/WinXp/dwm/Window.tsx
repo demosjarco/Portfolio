@@ -150,7 +150,7 @@ export const Window = component$<WindowProps>(({ app, isFocus, onFocus$, onMinim
 
 			{/* Content area */}
 			<div class="min-h-0 flex-1 overflow-hidden border border-t-0 border-[#0831d9] bg-white">
-				<Content />
+				<Content app={app} />
 			</div>
 
 			{/* Resize handles (only when restored + resizable) */}

@@ -56,6 +56,10 @@ export enum PowerState {
  */
 export enum AppKey {
 	SecurityEssentials = 'SecurityEssentials',
+	/** Windows Messenger — the chatroom directory (single window). */
+	Messenger = 'Messenger',
+	/** A single open chatroom conversation (one window per room). */
+	MessengerRoom = 'MessengerRoom',
 }
 
 /**
@@ -85,6 +89,14 @@ export interface AppInstance {
 	/** Size (px) when not maximized. */
 	width: number;
 	height: number;
+	/**
+	 * Per-instance dedupe key for multi-instance apps (e.g. a chatroom id).
+	 * Two launches with the same {@link appKey} + `instanceKey` focus the
+	 * existing window instead of opening a duplicate.
+	 */
+	instanceKey?: string;
+	/** App-specific serializable payload handed to the window body. */
+	data?: { roomId: string; roomName: string };
 }
 
 /**
