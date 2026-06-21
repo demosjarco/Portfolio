@@ -14,10 +14,10 @@
 	"limits": { "cpu_ms": 30000, "subrequests": 10000000 },
 	"vars": {
 		"NODE_ENV": "production",
-		// 1 hour * 60 minutes * 60 seconds
-		"SQL_TTL": "3600"
+		// 5 minutes * 60 seconds
+		"SQL_TTL": "30"
 	},
-	"secrets": { "required": ["CF_API_TOKEN"] },
+	"secrets": { "required": ["CF_API_TOKEN", "TURNSTILE_SECRET_KEY"] },
 	"assets": {
 		"directory": "./dist",
 		"run_worker_first": false
@@ -30,6 +30,20 @@
 			"migrations_dir": "db",
 			"migrations_pattern": "db/*/migration.sql",
 			"remote": true
+		}
+	],
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "CHATROOM",
+				"class_name": "Chatroom"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["Chatroom"]
 		}
 	],
 	"workflows": [

@@ -1,6 +1,10 @@
 import { component$, type Component } from '@builder.io/qwik';
 import MseIcon from '~/assets/windowsIcons/Microsoft_Security_Essentials_icon.png?w=16&h=16&jsx';
+import MessengerIcon from '~/assets/windowsIcons/msmsgs_1_1-6.png?w=16&h=16&jsx';
+import type { AppInstance } from '~/contexts/types';
 import { AppKey } from '~/contexts/types';
+import { MessengerDirectory } from '~/WinXp/apps/Messenger/Directory';
+import { MessengerRoom } from '~/WinXp/apps/Messenger/Room';
 import { SecurityEssentials } from './SecurityEssentials';
 
 /**
@@ -15,8 +19,8 @@ export interface AppRegistryEntry {
 	title: string;
 	/** 16x16 titlebar/taskbar icon. */
 	Icon: Component<{ class?: string }>;
-	/** The window body. */
-	Content: Component;
+	/** The window body. Receives its owning window instance. */
+	Content: Component<{ app: AppInstance }>;
 	/** Default window size on first open (px). */
 	defaultSize: { width: number; height: number };
 	/** Whether more than one window of this app may exist at once. */
@@ -30,6 +34,7 @@ export interface AppRegistryEntry {
  * from the single largest source PNG and downscaled by Qwik's image optimizer.
  */
 const MseTaskbarIcon = component$<{ class?: string }>(({ class: cls }) => <MseIcon class={cls} />);
+const MessengerTaskbarIcon = component$<{ class?: string }>(({ class: cls }) => <MessengerIcon class={cls} />);
 
 export const appRegistry: Record<AppKey, AppRegistryEntry> = {
 	[AppKey.SecurityEssentials]: {
@@ -38,6 +43,22 @@ export const appRegistry: Record<AppKey, AppRegistryEntry> = {
 		Content: SecurityEssentials,
 		defaultSize: { width: 720, height: 520 },
 		singleInstance: true,
+		resizable: true,
+	},
+	[AppKey.Messenger]: {
+		title: 'Windows Messenger',
+		Icon: MessengerTaskbarIcon,
+		Content: MessengerDirectory,
+		defaultSize: { width: 350, height: 560 },
+		singleInstance: true,
+		resizable: true,
+	},
+	[AppKey.MessengerRoom]: {
+		title: 'Conversation',
+		Icon: MessengerTaskbarIcon,
+		Content: MessengerRoom,
+		defaultSize: { width: 520, height: 480 },
+		singleInstance: false,
 		resizable: true,
 	},
 };
