@@ -88,6 +88,7 @@ jobs:
       - run: npm run build.client
         env:
           PUBLIC_GIT_HASH: ${{ github.sha }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       - name: Save client cache
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
@@ -98,6 +99,7 @@ jobs:
       - run: npm run build.server
         env:
           GIT_HASH: ${{ github.sha }}
+          TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       - name: Save server cache
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
@@ -119,7 +121,9 @@ jobs:
             CF_ZONE_ID
           secrets: |
             CF_API_TOKEN
+            TURNSTILE_SECRET_KEY
         env:
           GIT_HASH: ${{ github.sha }}
           CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
