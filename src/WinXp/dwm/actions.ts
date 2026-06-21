@@ -1,4 +1,4 @@
-import type { AppInstance, WindowManagerState, AppKey } from '~/contexts/types';
+import type { AppInstance, AppKey, WindowManagerState } from '~/contexts/types';
 import { Focusing } from '~/contexts/types';
 import { appRegistry } from '../apps/registry';
 
@@ -25,19 +25,21 @@ export function focusedAppId(state: WindowManagerState): number {
 }
 
 /**
- * Launch an app, or — for single-instance apps that are already open —
- * refocus/restore the existing window instead of opening a second one.
+ * Launch an app, or refocus an existing window instead of opening a duplicate.
+ *
+ * Dedupe rules:
+ * - When `opts.instanceKey` is given, an existing window with the same
+ *   {@link AppKey} *and* instance key is refocused (e.g. one window per
+ *   chatroom).
+ * - Otherwise, single-instance apps refocus their lone existing window.
  */
-export function launchApp(state: WindowManagerState, appKey: AppKey): void {
+export function launchApp(state: WindowManagerState, appKey: AppKey, opts?: { instanceKey?: string; data?: AppInstance['data']; title?: string }): void {
 	const entry = appRegistry[appKey];
 
-	if (entry.singleInstance) {
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- always true while only one AppKey exists; future apps make this meaningful
-		const existing = state.apps.find((a) => a.appKey === appKey);
-		if (existing) {
-			focusApp(state, existing.id);
-			return;
-		}
+	const existing = opts?.instanceKey !== undefined ? state.apps.find((a) => a.appKey === appKey && a.instanceKey === opts.instanceKey) : entry.singleInstance ? state.apps.find((a) => a.appKey === appKey) : undefined;
+	if (existing) {
+		focusApp(state, existing.id);
+		return;
 	}
 
 	const id = state.nextAppId;
@@ -45,7 +47,7 @@ export function launchApp(state: WindowManagerState, appKey: AppKey): void {
 	const win: AppInstance = {
 		id,
 		appKey,
-		title: entry.title,
+		title: opts?.title ?? entry.title,
 		zIndex: state.nextZIndex,
 		minimized: false,
 		maximized: false,
@@ -53,6 +55,8 @@ export function launchApp(state: WindowManagerState, appKey: AppKey): void {
 		y: 60 + offset,
 		width: entry.defaultSize.width,
 		height: entry.defaultSize.height,
+		instanceKey: opts?.instanceKey,
+		data: opts?.data,
 	};
 
 	state.apps = [...state.apps, win];
