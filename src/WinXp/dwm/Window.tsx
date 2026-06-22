@@ -117,7 +117,7 @@ export const Window = component$<WindowProps>(({ app, isFocus, onFocus$, onMinim
 				top: maximized ? '0' : `${geo.y}px`,
 				width: maximized ? '100%' : `${geo.width}px`,
 				height: maximized ? `calc(100% - ${TASKBAR_H}px)` : `${geo.height}px`,
-				'z-index': app.zIndex,
+				'z-index': `${app.zIndex}`,
 				'background-color': isFocus ? '#0831d9' : '#6582f5',
 				'touch-action': 'none',
 			}}
