@@ -1,6 +1,6 @@
 import { sql, type SQL } from 'drizzle-orm/sql';
 import { index, primaryKey, snakeCase } from 'drizzle-orm/sqlite-core';
-import type { MSEStatus } from './types';
+import type { MSEStatus } from '~db/types';
 
 export const waf_events = snakeCase.table(
 	'waf_events',
