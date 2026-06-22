@@ -76,6 +76,14 @@ addEventListener('message', (event) => {
 		case 'disconnect':
 			closeRoom(data.roomId);
 			break;
+		case 'keepalive': {
+			// Receiving this message alone resets the worker's idle-termination
+			// timer. If the socket is gone (the worker was recycled before this
+			// ping arrived), transparently reopen it.
+			const ws = rooms.get(data.roomId);
+			if (!ws || ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) openRoom(data.roomId, data.wsUrl);
+			break;
+		}
 	}
 });
 
