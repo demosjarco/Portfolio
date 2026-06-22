@@ -1,6 +1,6 @@
 import type { AppInstance, AppKey, WindowManagerState } from '~/contexts/types';
 import { Focusing } from '~/contexts/types';
-import { appRegistry } from '../apps/registry';
+import { appRegistry } from '~/WinXp/apps/registry';
 
 /**
  * Pure helpers that mutate the Desktop Window Manager (DWM) store in place.
