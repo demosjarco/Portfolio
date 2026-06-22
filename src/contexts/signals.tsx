@@ -1,4 +1,4 @@
-import { AppKey, Focusing, PowerState, type IconStates, type WindowManagerState } from './types';
+import { AppKey, Focusing, PowerState, type IconStates, type WindowManagerState } from '~/contexts/types';
 
 export const defaultIconState: IconStates = [
 	{

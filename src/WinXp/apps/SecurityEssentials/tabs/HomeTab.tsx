@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import { ShieldOk, ShieldWarn } from '../StatusIcons';
+import { ShieldOk, ShieldWarn } from '~/WinXp/apps/SecurityEssentials/StatusIcons';
 
 /**
  * Home tab — the protected status summary that greets the user when MSE opens.

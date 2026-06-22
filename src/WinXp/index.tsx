@@ -1,11 +1,11 @@
 import { component$, useContext, useTask$ } from '@builder.io/qwik';
 import '@fontsource/noto-sans';
-import { PowerStateContext } from '../contexts';
-import { PowerState } from '../contexts/types';
-import Background from './background';
-import IconsContainer from './Icons/IconsContainer';
-import Taskbar from './Taskbar';
-import Wdm from './wdm';
+import { PowerStateContext } from '~/contexts';
+import { PowerState } from '~/contexts/types';
+import Background from '~/WinXp/background';
+import IconsContainer from '~/WinXp/Icons/IconsContainer';
+import Taskbar from '~/WinXp/Taskbar';
+import Wdm from '~/WinXp/wdm';
 
 export default component$(() => {
 	const power = useContext(PowerStateContext);

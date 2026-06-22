@@ -1,5 +1,5 @@
-import type { IconStates, PowerState, Wallpapers, WindowManagerState } from './types';
 import { createContextId, type ReadonlySignal, type Signal } from '@builder.io/qwik';
+import type { IconStates, PowerState, Wallpapers, WindowManagerState } from '~/contexts/types';
 
 export const WallpaperContext = createContextId<Signal<Wallpapers>>('WallpaperContext');
 export const IconStateContext = createContextId<Signal<IconStates>>('IconStateContext');

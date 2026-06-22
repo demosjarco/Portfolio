@@ -1,7 +1,7 @@
 import { component$, useComputed$, useServerData, useVisibleTask$ } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister, useLocation } from '@builder.io/qwik-city';
 import { initFlowbite } from 'flowbite';
-import { RouterHead } from './components/router-head/router-head';
+import { RouterHead } from '~/components/router-head/router-head';
 
 import './global.css';
 
