@@ -1,7 +1,7 @@
 import { $, component$, useContext } from '@builder.io/qwik';
-import { WindowManagerContext } from '../contexts';
-import { closeApp, focusApp, focusedAppId, minimizeApp, toggleMaximizeApp } from './dwm/actions';
-import { Window } from './dwm/Window';
+import { WindowManagerContext } from '~/contexts';
+import { closeApp, focusApp, focusedAppId, minimizeApp, toggleMaximizeApp } from '~/WinXp/dwm/actions';
+import { Window } from '~/WinXp/dwm/Window';
 
 /**
  * Desktop Window Manager (DWM) render surface.

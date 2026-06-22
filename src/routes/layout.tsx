@@ -1,7 +1,7 @@
 import { component$, Slot, useContextProvider, useSignal, useStore } from '@builder.io/qwik';
-import { defaultIconState, defaultState, defaultWindowManagerState } from '../contexts/signals';
 import { type DocumentHead, type RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { IconStateContext, PowerStateContext, TurnstileSiteKeyContext, WallpaperContext, WindowManagerContext } from '~/contexts';
+import { defaultIconState, defaultState, defaultWindowManagerState } from '~/contexts/signals';
 
 export const head: DocumentHead = {
 	title: 'DemosJarco Portfolio',

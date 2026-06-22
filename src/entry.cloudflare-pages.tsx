@@ -2,8 +2,8 @@ import { createQwikCity, type PlatformCloudflarePages } from '@builder.io/qwik-c
 import qwikCityPlan from '@qwik-city-plan';
 import { manifest } from '@qwik-client-manifest';
 import type { PlatformProxy } from 'wrangler';
+import type { EnvVars } from '~/types';
 import render from './entry.ssr';
-import type { EnvVars } from './types';
 
 declare global {
 	interface CacheStorage {
