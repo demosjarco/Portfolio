@@ -5,7 +5,7 @@ import type { AppInstance } from '~/contexts/types';
 import { AppKey } from '~/contexts/types';
 import { MessengerDirectory } from '~/WinXp/apps/Messenger/Directory';
 import { MessengerRoom } from '~/WinXp/apps/Messenger/Room';
-import { SecurityEssentials } from './SecurityEssentials';
+import { SecurityEssentials } from '~/WinXp/apps/SecurityEssentials';
 
 /**
  * Static metadata describing a launchable application.
