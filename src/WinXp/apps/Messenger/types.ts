@@ -125,6 +125,15 @@ export type SwCommand =
 			ns: 'msmsgs';
 			cmd: 'disconnect';
 			roomId: string;
+	  }
+	| {
+			// Keeps the (idle-terminated) worker alive and reconnects the room
+			// if the worker was already recycled. Carries `wsUrl` so the worker
+			// can reopen the socket from scratch.
+			ns: 'msmsgs';
+			cmd: 'keepalive';
+			roomId: string;
+			wsUrl: string;
 	  };
 
 /** Service worker -> UI thread. */

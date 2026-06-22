@@ -59,6 +59,12 @@ function connectDirect(roomId: string, wsUrl: string, handlers: RoomHandlers): (
 
 /* -------------------------------------------------- service worker path */
 
+/**
+ * How often the page pings the worker. Must stay comfortably under Chrome's
+ * ~30s idle-termination window so the worker (and its socket) never lapses.
+ */
+const KEEPALIVE_MS = 25_000;
+
 /** Post a command to the controlling service worker. */
 function post(cmd: SwCommand): void {
 	navigator.serviceWorker.controller?.postMessage(cmd);
@@ -87,7 +93,13 @@ function connectViaWorker(roomId: string, wsUrl: string, handlers: RoomHandlers)
 	navigator.serviceWorker.addEventListener('message', listener);
 	post({ ns: 'msmsgs', cmd: 'connect', roomId, wsUrl });
 
+	// Chrome terminates an idle service worker after ~30s, which would destroy
+	// the worker-owned socket. Ping it periodically to keep it alive and let it
+	// transparently reconnect the room if it was already recycled.
+	const keepAlive = setInterval(() => post({ ns: 'msmsgs', cmd: 'keepalive', roomId, wsUrl }), KEEPALIVE_MS);
+
 	return () => {
+		clearInterval(keepAlive);
 		navigator.serviceWorker.removeEventListener('message', listener);
 		post({ ns: 'msmsgs', cmd: 'disconnect', roomId });
 	};
