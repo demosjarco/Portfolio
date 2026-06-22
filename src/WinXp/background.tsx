@@ -1,6 +1,6 @@
 import { component$, useContext, useVisibleTask$, type ClassList } from '@builder.io/qwik';
-import { WallpaperContext } from '../contexts';
-import { Wallpapers } from '../contexts/types';
+import { WallpaperContext } from '~/contexts';
+import { Wallpapers } from '~/contexts/types';
 
 import NostalgicSolitaire from '~/assets/wallpapers/new/Microsoft_Nostalgic_Solitaire_4k.jpg?jsx';
 import NostalgicWindows from '~/assets/wallpapers/new/Microsoft_Nostalgic_Windows_Wallpaper_4k.jpg?jsx';
