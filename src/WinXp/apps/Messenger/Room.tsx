@@ -64,7 +64,7 @@ export const MessengerRoom = component$<{ app?: AppInstance }>(({ app }) => {
 
 		const push = (line: ChatLine) => {
 			lines.items = [...lines.items, line].slice(-500);
-			queueMicrotask(() => scroller.value?.scrollTo({ top: scroller.value.scrollHeight }));
+			requestAnimationFrame(() => scroller.value?.scrollTo({ top: scroller.value.scrollHeight }));
 		};
 
 		const upsertIdentity = (userId: string, avatar?: string, displayName?: string) => {
