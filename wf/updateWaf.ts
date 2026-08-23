@@ -14,6 +14,23 @@ import { SQLCache } from '~/utils/sqlCache';
 import * as schema from '~db/index.js';
 import { MSEStatus } from '~db/types';
 
+/**
+ * Cloudflare-managed rulesets that `cf.rulesets.get()` sometimes can't be read, regardless of token permissions - confirmed 403 even with a full-account, full-zone read-only token. Hardcoded here instead of fetched.
+ */
+const SYSTEM_RULESETS: Record<string, RulesetGetResponse> = {
+	// API Shield's entrypoint ruleset for the `http_request_api_gateway_late` phase.
+	'4bef3cb9110a45b6bca6b12a68dd1e06': {
+		id: '4bef3cb9110a45b6bca6b12a68dd1e06',
+		kind: 'managed',
+		name: 'API Shield',
+		description: 'Cloudflare-managed entrypoint ruleset for API Shield.',
+		phase: 'http_request_api_gateway_late' as RulesetGetResponse['phase'],
+		last_updated: '2026-08-23T00:00:00Z',
+		version: '1',
+		rules: [],
+	},
+} as const;
+
 const updateWafParams = zm.object({
 	/**
 	 * @link https://developers.cloudflare.com/firewall/cf-firewall-rules/actions/#supported-actions
@@ -193,76 +210,91 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 				}
 			},
 		});
+		// Ruleset IDs that couldn't be resolved via `step.do` OR `SYSTEM_RULESETS` - their events get skipped below
+		const unresolvedRulesetIds = new Set<string>();
 		const rulesets = await Array.from(uniqueRulesets).reduce(
 			async (accPromise, rulesetId) => {
 				const acc = await accPromise;
-				// Must `async () => await` the promise because `APIPromise` is a lazy promise
-				// @ts-expect-error - Object is Serializable just fine. TS is tripping over `unknown`
-				acc[rulesetId] = await step.do(`Get ruleset ${rulesetId}`, { sensitive: 'output' }, async () => await cf.rulesets.get(rulesetId, { zone_id: this.env.CF_ZONE_ID }));
+				try {
+					// Must `async () => await` the promise because `APIPromise` is a lazy promise
+					// @ts-expect-error - Object is Serializable just fine. TS is tripping over `unknown`
+					acc[rulesetId] = await step.do(`Get ruleset ${rulesetId}`, { sensitive: 'output' }, async () => await cf.rulesets.get(rulesetId, { zone_id: this.env.CF_ZONE_ID }));
+				} catch {
+					const systemRuleset = SYSTEM_RULESETS[rulesetId];
+					if (systemRuleset) {
+						acc[rulesetId] = systemRuleset;
+					} else {
+						unresolvedRulesetIds.add(rulesetId);
+					}
+				}
 				return acc;
 			},
 			Promise.resolve({} as Record<string, RulesetGetResponse>),
 		);
 
+		const resolvedEvents = unresolvedRulesetIds.size > 0 ? events.filter((event) => !unresolvedRulesetIds.has(event.rulesetId)) : events;
+
 		const generator = new MseThreatNameGenerator(rulesets);
 		const hexCheck = zm.hex();
-		await step.do('Insert events into database', async () =>
-			db
-				.batch([
-					// Batch types needs at least 1 guaranteed query, so we do the first insert separately and then `map()` the rest
-					(() => {
-						const event = events[0]!;
-						const { mseThreatName, mseStatus } = generator.generate(event);
+		if (resolvedEvents.length > 0) {
+			await step.do('Insert events into database', async () =>
+				db
+					.batch([
+						// Batch types needs at least 1 guaranteed query, so we do the first insert separately and then `map()` the rest
+						(() => {
+							const event = resolvedEvents[0]!;
+							const { mseThreatName, mseStatus } = generator.generate(event);
 
-						return db
-							.insert(schema.waf_events)
-							.values({
-								ray_id: sql`unhex(${event.rayName})`,
-								rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
-								match_index: event.matchIndex,
-								b_time: new Date(event.datetime),
-								threat_name: mseThreatName,
-								description: event.description,
-								...(event.ja3Hash.trim() !== '' && { ja3: sql`unhex(${event.ja3Hash})` }),
-								status: mseStatus,
-							})
-							.onConflictDoNothing();
-					})(),
-					...events.slice(1).map((event) => {
-						const { mseThreatName, mseStatus } = generator.generate(event);
+							return db
+								.insert(schema.waf_events)
+								.values({
+									ray_id: sql`unhex(${event.rayName})`,
+									rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
+									match_index: event.matchIndex,
+									b_time: new Date(event.datetime),
+									threat_name: mseThreatName,
+									description: event.description,
+									...(event.ja3Hash.trim() !== '' && { ja3: sql`unhex(${event.ja3Hash})` }),
+									status: mseStatus,
+								})
+								.onConflictDoNothing();
+						})(),
+						...resolvedEvents.slice(1).map((event) => {
+							const { mseThreatName, mseStatus } = generator.generate(event);
 
-						return db
-							.insert(schema.waf_events)
-							.values({
-								ray_id: sql`unhex(${event.rayName})`,
-								rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
-								match_index: event.matchIndex,
-								b_time: new Date(event.datetime),
-								threat_name: mseThreatName,
-								description: event.description,
-								...(event.ja3Hash.trim() !== '' && { ja3: sql`unhex(${event.ja3Hash})` }),
-								status: mseStatus,
-							})
-							.onConflictDoNothing();
-					}),
-				])
-				.then((results) => ({
-					averageMeta: {
-						changes: results.reduce((sum, result) => sum + result.meta.changes, 0) / results.length,
-						duration: results.reduce((sum, result) => sum + result.meta.duration, 0) / results.length,
-						rows_read: results.reduce((sum, result) => sum + result.meta.rows_read, 0) / results.length,
-						rows_written: results.reduce((sum, result) => sum + result.meta.rows_written, 0) / results.length,
-						timings: { sql_duration_ms: results.reduce((sum, result) => sum + (result.meta.timings?.sql_duration_ms ?? 0), 0) / results.length },
-						total_attempts: results.reduce((sum, result) => sum + (result.meta.total_attempts ?? 0), 0) / results.length,
-					},
-					cumulativeMeta: {
-						changed_db: results.some((result) => result.meta.changed_db),
-						size_after: results[results.length - 1]!.meta.size_after,
-					},
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					raw: JSON.parse(JSON.stringify(results)),
-				})),
-		);
+							return db
+								.insert(schema.waf_events)
+								.values({
+									ray_id: sql`unhex(${event.rayName})`,
+									rule_id: sql`unhex(${hexCheck.safeParse(event.ruleId).success ? event.ruleId : Buffer.from(event.ruleId, 'utf8').toString('hex')})`,
+									match_index: event.matchIndex,
+									b_time: new Date(event.datetime),
+									threat_name: mseThreatName,
+									description: event.description,
+									...(event.ja3Hash.trim() !== '' && { ja3: sql`unhex(${event.ja3Hash})` }),
+									status: mseStatus,
+								})
+								.onConflictDoNothing();
+						}),
+					])
+					.then((results) => ({
+						averageMeta: {
+							changes: results.reduce((sum, result) => sum + result.meta.changes, 0) / results.length,
+							duration: results.reduce((sum, result) => sum + result.meta.duration, 0) / results.length,
+							rows_read: results.reduce((sum, result) => sum + result.meta.rows_read, 0) / results.length,
+							rows_written: results.reduce((sum, result) => sum + result.meta.rows_written, 0) / results.length,
+							timings: { sql_duration_ms: results.reduce((sum, result) => sum + (result.meta.timings?.sql_duration_ms ?? 0), 0) / results.length },
+							total_attempts: results.reduce((sum, result) => sum + (result.meta.total_attempts ?? 0), 0) / results.length,
+						},
+						cumulativeMeta: {
+							changed_db: results.some((result) => result.meta.changed_db),
+							size_after: results[results.length - 1]!.meta.size_after,
+						},
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+						raw: JSON.parse(JSON.stringify(results)),
+					})),
+			);
+		}
 
 		await step.do('Optimize database', () =>
 			this.env.DB.withSession('first-unconstrained')
