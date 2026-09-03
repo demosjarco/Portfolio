@@ -54,7 +54,7 @@ jobs:
         background: true
         continue-on-error: true
       - name: Restore TS cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             .tsbuildinfo
@@ -63,7 +63,7 @@ jobs:
             tsc-${{ github.head_ref || github.ref_name }}-
           enableCrossOsArchive: true
       - name: Restore server cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             server/**
@@ -73,7 +73,7 @@ jobs:
           enableCrossOsArchive: true
       - run: npm run build.types
       - name: Save TS cache
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             .tsbuildinfo
@@ -81,7 +81,7 @@ jobs:
           enableCrossOsArchive: true
         background: true
       - name: Restore client cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             dist/**
@@ -92,7 +92,7 @@ jobs:
           PUBLIC_GIT_HASH: ${{ github.sha }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       - name: Save client cache
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             dist/**
@@ -104,7 +104,7 @@ jobs:
           GIT_HASH: ${{ github.sha }}
           TURNSTILE_SITE_KEY: ${{ secrets.TURNSTILE_SITE_KEY }}
       - name: Save server cache
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             server/**
