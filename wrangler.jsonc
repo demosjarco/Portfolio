@@ -6,7 +6,7 @@
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public", "enable_request_signal", "request_signal_passthrough"],
 	"workers_dev": false,
 	"preview_urls": false,
-	"route": { "pattern": "demosjarco.dev", "custom_domain": true },
+	"route": { "pattern": "demosjarco.dev", "custom_domain": true, "previews_enabled": true },
 	"minify": true,
 	"keep_names": false,
 	"upload_source_maps": true,
@@ -61,5 +61,19 @@
 			"limits": { "steps": 25000 },
 			"schedules": ["0 * * * *"]
 		}
-	]
+	],
+	// Durable Object bindings accessed via `env.NAME` (see src/api-routes/messenger/index.ts) aren't auto-isolated per Workers Preview and 500 with a 1101 error unless redeclared here.
+	"previews": {
+		"vars": {
+			"NODE_ENV": "preview"
+		},
+		"durable_objects": {
+			"bindings": [
+				{
+					"name": "CHATROOM",
+					"class_name": "Chatroom"
+				}
+			]
+		}
+	}
 }
