@@ -47,7 +47,7 @@
 		"@fontsource/noto-sans": "5.2.10",
 		"@hono/zod-validator": "0.8.0",
 		"@qwikest/icons": "0.0.13",
-		"@urql/core": "6.0.2",
+		"@urql/core": "6.0.3",
 		"cloudflare": "6.4.0",
 		"dompurify": "3.4.11",
 		"drizzle-orm": "1.0.0-rc.3",
