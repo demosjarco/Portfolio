@@ -51,7 +51,6 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 		);
 
 		const db = drizzle(this.env.DB.withSession('first-unconstrained'), {
-			schema,
 			cache: new SQLCache({
 				dbName: DB_D1_ID,
 				dbType: 'd1',

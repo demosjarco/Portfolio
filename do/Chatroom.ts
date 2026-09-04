@@ -47,7 +47,6 @@ export class Chatroom extends DurableObject<EnvVars> {
 		super(ctx, env);
 
 		this.db = drizzle(this.env.DB.withSession('first-unconstrained'), {
-			schema,
 			cache: new SQLCache({
 				dbName: DB_D1_ID,
 				dbType: 'd1',
