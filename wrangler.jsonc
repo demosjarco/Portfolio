@@ -2,7 +2,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "demosjarco-portfolio",
 	"main": "src/entry.cloudflare-workers.ts",
-	"compatibility_date": "2026-05-26",
+	"compatibility_date": "2026-08-31",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public", "enable_request_signal", "request_signal_passthrough"],
 	"workers_dev": false,
 	"preview_urls": false,
@@ -10,12 +10,13 @@
 	"minify": true,
 	"keep_names": false,
 	"upload_source_maps": true,
-	"observability": { "logs": { "enabled": true }, "traces": { "enabled": true } },
+	"observability": { "logs": { "enabled": true, "invocation_logs": true, "persist": true }, "traces": { "enabled": true, "persist": true } },
 	"limits": { "cpu_ms": 30000, "subrequests": 10000000 },
+	"dependencies_instrumentation": { "enabled": false },
 	"vars": {
 		"NODE_ENV": "production",
 		// 5 minutes * 60 seconds
-		"SQL_TTL": "30"
+		"SQL_TTL": "300"
 	},
 	"secrets": { "required": ["CF_API_TOKEN", "TURNSTILE_SECRET_KEY"] },
 	"assets": {
@@ -40,12 +41,13 @@
 			}
 		]
 	},
-	"migrations": [
-		{
-			"tag": "v1",
-			"new_sqlite_classes": ["Chatroom"]
+	"exports": {
+		"Chatroom": {
+			"type": "durable-object",
+			"state": "created",
+			"storage": "sqlite"
 		}
-	],
+	},
 	"workflows": [
 		{
 			"name": "portfolio-update-waf",
