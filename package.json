@@ -48,7 +48,7 @@
 		"@hono/zod-validator": "0.9.1",
 		"@qwikest/icons": "0.0.13",
 		"@urql/core": "6.0.3",
-		"cloudflare": "6.4.0",
+		"cloudflare": "7.0.0",
 		"dompurify": "3.4.14",
 		"drizzle-orm": "1.0.0-rc.4",
 		"hono": "4.13.5",
@@ -79,6 +79,6 @@
 		"typescript": "6.0.3",
 		"typescript-eslint": "8.69.0",
 		"vite-tsconfig-paths": "6.1.1",
-		"wrangler": "4.103.0"
+		"wrangler": "4.128.0"
 	}
 }
