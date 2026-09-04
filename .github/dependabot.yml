@@ -48,6 +48,10 @@ updates:
       - dependency-name: 'typescript'
         versions:
           - '>=7.0.0, <7.1.0'
+      # drizzle publishes a canary build per commit as e.g. 1.0.0-rc.5-169397b; by semver rules that outranks even a future clean 1.0.0-rc.99, so it always beats real rc tags. Pin to the last known-good clean rc and bump this bound by hand once the next clean rc.N actually ships.
+      - dependency-name: 'drizzle-*'
+        versions:
+          - '>1.0.0-rc.4, <1.0.0'
     groups:
       cloudflare:
         patterns:
