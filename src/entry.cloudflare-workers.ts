@@ -6,7 +6,6 @@ import { timing } from 'hono/timing';
 import baseApp from '~/api-routes/index.js';
 import { DB_D1_ID, type ContextVariables, type EnvVars } from '~/types';
 import { SQLCache } from '~/utils/sqlCache';
-import * as schema from '~db/index.js';
 
 // Re-export Durable Objects since workerd can only find from from `wrangler.jsonc`'s `main` file
 export { Chatroom } from '~do/Chatroom.js';
@@ -30,7 +29,6 @@ app.use('*', async (c, next) => {
 	c.set(
 		'db',
 		drizzle(c.var.dbSession, {
-			schema,
 			cache: new SQLCache({
 				dbName: DB_D1_ID,
 				dbType: 'd1',

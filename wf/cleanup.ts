@@ -10,7 +10,6 @@ export class Cleanup extends WorkflowEntrypoint<EnvVars> {
 		await Promise.allSettled([
 			step.do('Delete old WAF events', () => {
 				const db = drizzle(this.env.DB.withSession('first-unconstrained'), {
-					schema,
 					cache: new SQLCache({
 						dbName: DB_D1_ID,
 						dbType: 'd1',
