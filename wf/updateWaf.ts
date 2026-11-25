@@ -39,6 +39,15 @@ const updateWafParams = zm.object({
 });
 
 export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updateWafParams>> {
+	private readonly db = drizzle(this.env.DB.withSession('first-primary'), {
+		cache: new SQLCache({
+			dbName: DB_D1_ID,
+			dbType: 'd1',
+			cacheTTL: parseInt(this.env.SQL_TTL, 10),
+			strategy: 'explicit',
+		}),
+	});
+
 	override async run(event: Readonly<WorkflowEvent<zm.input<typeof updateWafParams>>>, step: WorkflowStep) {
 		const parsedPayload = await step.do('zod parse payload', () =>
 			updateWafParams.safeParseAsync(typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload).then((result) => {
@@ -50,17 +59,8 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 			}),
 		);
 
-		const db = drizzle(this.env.DB.withSession('first-unconstrained'), {
-			cache: new SQLCache({
-				dbName: DB_D1_ID,
-				dbType: 'd1',
-				cacheTTL: parseInt(this.env.SQL_TTL, 10),
-				strategy: 'explicit',
-			}),
-		});
-
 		const maxTime = await step.do('Get newest saved event', async () => {
-			const [row] = await db
+			const [row] = await this.db
 				.select({
 					maxTime: sql<number | null>`max(${schema.waf_events.b_time})`,
 				})
@@ -237,14 +237,14 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 		const hexCheck = zm.hex();
 		if (resolvedEvents.length > 0) {
 			await step.do('Insert events into database', async () =>
-				db
+				this.db
 					.batch([
 						// Batch types needs at least 1 guaranteed query, so we do the first insert separately and then `map()` the rest
 						(() => {
 							const event = resolvedEvents[0]!;
 							const { mseThreatName, mseStatus } = generator.generate(event);
 
-							return db
+							return this.db
 								.insert(schema.waf_events)
 								.values({
 									ray_id: sql`unhex(${event.rayName})`,
@@ -261,7 +261,7 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 						...resolvedEvents.slice(1).map((event) => {
 							const { mseThreatName, mseStatus } = generator.generate(event);
 
-							return db
+							return this.db
 								.insert(schema.waf_events)
 								.values({
 									ray_id: sql`unhex(${event.rayName})`,
@@ -295,20 +295,9 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 			);
 		}
 
-		await step.do('Optimize database', () =>
-			this.env.DB.withSession('first-unconstrained')
-				.prepare('PRAGMA optimize')
-				.run()
-				.then((result) => {
-					if (result.success) {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-						return JSON.parse(JSON.stringify(result));
-					} else {
-						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-						throw (result.error as unknown) instanceof Error ? result.error : new Error(result.error ?? 'Unknown error optimizing database');
-					}
-				}),
-		);
+		await step.do('Optimize database', async () => {
+			await this.db.run(sql`PRAGMA optimize`);
+		});
 	}
 }
 
