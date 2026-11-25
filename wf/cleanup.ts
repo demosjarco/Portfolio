@@ -6,19 +6,18 @@ import { SQLCache } from '~/utils/sqlCache';
 import * as schema from '~db/index.js';
 
 export class Cleanup extends WorkflowEntrypoint<EnvVars> {
+	private readonly db = drizzle(this.env.DB.withSession('first-primary'), {
+		cache: new SQLCache({
+			dbName: DB_D1_ID,
+			dbType: 'd1',
+			cacheTTL: parseInt(this.env.SQL_TTL, 10),
+			strategy: 'explicit',
+		}),
+	});
 	override async run(event: Readonly<WorkflowEvent<unknown>>, step: WorkflowStep) {
 		await Promise.allSettled([
 			step.do('Delete old WAF events', () => {
-				const db = drizzle(this.env.DB.withSession('first-unconstrained'), {
-					cache: new SQLCache({
-						dbName: DB_D1_ID,
-						dbType: 'd1',
-						cacheTTL: parseInt(this.env.SQL_TTL, 10),
-						strategy: 'explicit',
-					}),
-				});
-
-				return db
+				return this.db
 					.delete(schema.waf_events)
 					.where(
 						lt(
@@ -30,15 +29,7 @@ export class Cleanup extends WorkflowEntrypoint<EnvVars> {
 							),
 						),
 					)
-					.then((result) => {
-						if (result.success) {
-							// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-							return JSON.parse(JSON.stringify(result));
-						} else {
-							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-							throw (result.error as unknown) instanceof Error ? result.error : new Error(result.error ?? 'Unknown error inserting locations into database');
-						}
-					});
+					.then((result) => JSON.parse(JSON.stringify(result)) as object);
 			}),
 		]);
 	}
