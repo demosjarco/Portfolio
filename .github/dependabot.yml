@@ -22,6 +22,9 @@ updates:
         patterns:
           - 'changesets/*'
           - 'dependabot/*'
+          - 'actions/create-github-app-token'
+          - 'actions/github-script'
+          - 'cloudflare/wrangler-action'
       sast:
         patterns:
           - 'github/codeql-*'
