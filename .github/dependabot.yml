@@ -51,6 +51,14 @@ updates:
       - dependency-name: 'typescript'
         versions:
           - '>=7.0.0, <7.1.0'
+      # rc.6 removed query caching (`drizzle-orm/cache/core`, `cache` option, `.$withCache()`) which `SQLCache` depends on
+      - dependency-name: 'drizzle-orm'
+        versions:
+          - '1.0.0-rc.6'
+      # Kept in lockstep with `drizzle-orm`
+      - dependency-name: 'drizzle-kit'
+        versions:
+          - '1.0.0-rc.6'
     groups:
       cloudflare:
         patterns:
