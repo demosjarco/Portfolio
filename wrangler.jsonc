@@ -54,14 +54,16 @@
 			"binding": "UPDATE_WAF",
 			"class_name": "UpdateWaf",
 			"limits": { "steps": 25000 },
-			"schedules": ["*/5 * * * *"]
+			"schedules": ["*/5 * * * *"],
+			"default_retention": { "success_retention": "3 days" }
 		},
 		{
 			"name": "portfolio-cleanup",
 			"binding": "CLEANUP",
 			"class_name": "Cleanup",
-			"limits": { "steps": 25000 },
-			"schedules": ["0 * * * *"]
+			"limits": { "steps": 1 },
+			"schedules": ["0 * * * *"],
+			"default_retention": { "success_retention": "3 days" }
 		}
 	],
 	// Durable Object bindings accessed via `env.NAME` (see src/api-routes/messenger/index.ts) aren't auto-isolated per Workers Preview and 500 with a 1101 error unless redeclared here.
