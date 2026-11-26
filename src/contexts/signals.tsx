@@ -5,13 +5,15 @@ export const defaultIconState: IconStates = [
 		id: 0,
 		appKey: AppKey.SecurityEssentials,
 		title: 'Microsoft Security Essentials',
-		isFocus: false,
+		isSelected: false,
+		isFocused: false,
 	},
 	{
 		id: 1,
 		appKey: AppKey.Messenger,
 		title: 'Windows Messenger',
-		isFocus: false,
+		isSelected: false,
+		isFocused: false,
 	},
 ];
 export const defaultState: PowerState = PowerState.start;

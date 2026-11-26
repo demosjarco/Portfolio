@@ -4,11 +4,11 @@ export default component$<{ name: string; bold?: boolean }>(({ bold = false, ...
 	return (
 		<li class="w-full cursor-default p-px text-[#00136b] hover:bg-[#2f71cd] hover:text-white">
 			<button class="flex h-7 w-full cursor-default items-center">
-				<div class="mx-1 h-6 w-6">
+				<div class="mx-1 h-6 w-6 shrink-0">
 					<Slot />
 				</div>
 				<span
-					class="ml-1 text-xs"
+					class="ml-1 text-left text-xs leading-tight"
 					style={{
 						'font-weight': bold ? 'bold' : 'normal',
 					}}>
