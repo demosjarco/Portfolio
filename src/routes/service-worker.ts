@@ -1,11 +1,15 @@
-import { wsBase } from '~/WinXp/apps/Messenger/profile';
+// Type-only imports. Qwik City emits this worker at the site root but puts modules it shares with the app into chunks under /build/, and the worker's relative `./q-*.js` import of such a chunk 404s, so the worker fails to evaluate and never registers. Anything imported at runtime must therefore be used only here.
 import type { ServerMessage, SwCommand, SwEvent } from '~/WinXp/apps/Messenger/types';
+import type { PsSwCommand, PsSwEvent } from '~/WinXp/apps/PowerShell/types';
 
 addEventListener('install', () => self.skipWaiting());
 
 addEventListener('activate', () => self.clients.claim());
 
 declare const self: ServiceWorkerGlobalScope;
+
+/** WebSocket origin of the site's own API; the worker is always served from that origin. */
+const wsBase = self.location.origin.replace(/^http/, 'ws');
 
 /**
  * Windows Messenger chatroom sockets.
@@ -118,4 +122,87 @@ addEventListener('message', (event) => {
 // On teardown (a new worker taking over) drop every socket cleanly.
 addEventListener('activate', () => {
 	for (const [roomId] of rooms) closeRoom(roomId);
+	for (const [, ws] of sandboxes) ws.close(1001, 'Worker replaced');
+});
+
+/**
+ * Windows PowerShell sandbox sockets: one per sandbox, shared by every tab. Frames are relayed untouched; tabs demultiplex output by window id. Reconnects are driven by the tabs (see `WinXp/apps/PowerShell/client.ts`), which re-send `open` for their windows when the socket comes back.
+ */
+const sandboxes = new Map<string, WebSocket>();
+/** Connection id of each sandbox socket, sent with every `open` broadcast. */
+const sandboxConnIds = new WeakMap<WebSocket, string>();
+const sandboxPings = new Map<string, ReturnType<typeof setInterval>>();
+
+/** A sandbox id is 64 hex characters, so it can't escape `/sandbox/<id>/ws`. */
+const SAFE_SANDBOX_ID = /^[0-9a-f]{64}$/i;
+/** Socket keepalive; answered by the Durable Object's auto-response without waking it. */
+const SANDBOX_PING_MS = 30_000;
+
+async function broadcastPwsh(event: PsSwEvent) {
+	const clients = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
+	for (const client of clients) client.postMessage(event);
+}
+
+function openSandbox(sandboxId: string) {
+	if (!SAFE_SANDBOX_ID.test(sandboxId)) return;
+	const id = sandboxId.toLowerCase();
+
+	const existing = sandboxes.get(id);
+	if (existing && (existing.readyState === WebSocket.OPEN || existing.readyState === WebSocket.CONNECTING)) {
+		// A new tab or window joined an open socket: let it start its windows.
+		if (existing.readyState === WebSocket.OPEN) void broadcastPwsh({ ns: 'pwsh', evt: 'open', sandboxId: id, connId: sandboxConnIds.get(existing)! });
+		return;
+	}
+
+	const ws = new WebSocket(new URL(`/api/powershell/sandbox/${id}/ws`, wsBase).href);
+	ws.binaryType = 'arraybuffer';
+	sandboxes.set(id, ws);
+	const connId = crypto.randomUUID();
+	sandboxConnIds.set(ws, connId);
+
+	ws.addEventListener('open', () => {
+		sandboxPings.set(
+			id,
+			setInterval(() => ws.readyState === WebSocket.OPEN && ws.send('ping'), SANDBOX_PING_MS),
+		);
+		void broadcastPwsh({ ns: 'pwsh', evt: 'open', sandboxId: id, connId });
+	});
+	ws.addEventListener('message', (event: MessageEvent<ArrayBuffer | string>) => {
+		if (typeof event.data !== 'string') {
+			void broadcastPwsh({ ns: 'pwsh', evt: 'output', sandboxId: id, data: event.data });
+			return;
+		}
+		if (event.data === 'pong') return;
+		// Relayed as text; the tab validates it. Keeps zod (and the chunk it would pull in) out of the worker.
+		void broadcastPwsh({ ns: 'pwsh', evt: 'message', sandboxId: id, data: event.data });
+	});
+	ws.addEventListener('close', (event) => {
+		clearInterval(sandboxPings.get(id));
+		sandboxPings.delete(id);
+		if (sandboxes.get(id) === ws) sandboxes.delete(id);
+		void broadcastPwsh({ ns: 'pwsh', evt: 'close', sandboxId: id, code: event.code });
+	});
+}
+
+addEventListener('message', (event) => {
+	if (event.origin !== self.location.origin) return;
+
+	const data = event.data as PsSwCommand | undefined;
+	if (data?.ns !== 'pwsh' || !SAFE_SANDBOX_ID.test(data.sandboxId)) return;
+	const id = data.sandboxId.toLowerCase();
+
+	switch (data.cmd) {
+		case 'connect':
+			openSandbox(id);
+			break;
+		case 'send': {
+			const ws = sandboxes.get(id);
+			if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data.payload));
+			break;
+		}
+		case 'keepalive':
+			// Receiving this resets the worker's idle timer. If the worker was recycled the socket is gone; tabs reconnect when they see no `open`, so reopen it here.
+			if (!sandboxes.has(id)) openSandbox(id);
+			break;
+	}
 });

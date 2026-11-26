@@ -11,6 +11,10 @@ This project is a re-creation of Windows XP, built with [Qwik](https://qwik.dev/
 - **Start the server:** `npm run start`
 - **Start with Node inspector / Chrome DevTools:** `npm run dev`
 
+## Apps and Start → Run
+
+Every app in `src/WinXp/apps/registry.tsx` must declare `runNames`: the name(s) that open it from Start → Run, matching the real XP executable (e.g. `msmsgs` for Windows Messenger, `msseces` for Security Essentials, `cmd`, `powershell`). Run matches them case-insensitively, with or without `.exe` or a path. Use `[]` only for windows that can't be launched on their own (e.g. a single Messenger conversation).
+
 ## Images
 
 All images bundled in the app must be imported with `?jsx` at the end so that Qwik can properly optimize them (see [Qwik image optimization](https://qwik.dev/docs/integrations/image-optimization/#image-optimization)). For example, `import Logo from './logo.png?jsx';` and then use it as `<Logo />`.

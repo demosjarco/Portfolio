@@ -27,7 +27,16 @@ export default component$(() => {
 					<span class="inline-block align-sub text-sm font-bold italic">start</span>
 				</span>
 			</button>
-			<div id="startMenu" class="z-10 hidden">
+			<div
+				id="startMenu"
+				class="z-10 hidden"
+				onClick$={(event) => {
+					// Picking an item (a button or link that isn't a submenu toggle) closes the Start menu and its submenus, like XP. Otherwise the menu stays over whatever just opened, e.g. the Run dialog, which opens right where the menu sits.
+					const item = (event.target as Element).closest('button, a');
+					if (!item || item.hasAttribute('data-dropdown-toggle') || item.hasAttribute('data-submenu-toggle')) return;
+					const dropdowns = (window as Window & { FlowbiteInstances?: { getInstances(component: 'Dropdown'): false | Record<string, { hide(): void }> } }).FlowbiteInstances?.getInstances('Dropdown');
+					if (dropdowns) for (const dropdown of Object.values(dropdowns)) dropdown.hide();
+				}}>
 				<Menu />
 			</div>
 		</>

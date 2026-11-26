@@ -41,8 +41,9 @@ const PROFILE_CHANNEL = 'msmsgs.profile';
  * gated behind a confirmation.
  */
 export const MessengerRoom = component$<{ app?: AppInstance }>(({ app }) => {
-	const roomId = app?.data?.roomId ?? '';
-	const roomName = useSignal(app?.data?.roomName ?? 'Conversation');
+	const data = app?.data && 'roomId' in app.data ? app.data : undefined;
+	const roomId = data?.roomId ?? '';
+	const roomName = useSignal(data?.roomName ?? 'Conversation');
 
 	const lines = useStore<{ items: ChatLine[] }>({ items: [] });
 	const members = useStore<{ list: RoomMember[] }>({ list: [] });

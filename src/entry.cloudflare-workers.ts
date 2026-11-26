@@ -9,6 +9,7 @@ import { SQLCache } from '~/utils/sqlCache';
 
 // Re-export Durable Objects since workerd can only find from from `wrangler.jsonc`'s `main` file
 export { Chatroom } from '~do/Chatroom.js';
+export { PowerShellSandbox, PowerShellSink } from '~do/PowerShellSandbox.js';
 
 // Re-export Workflows since workerd can only find from from `wrangler.jsonc`'s `main` file
 export { Cleanup } from '~wf/cleanup.js';

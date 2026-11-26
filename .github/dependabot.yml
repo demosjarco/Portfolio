@@ -5,6 +5,14 @@
 
 version: 2
 updates:
+  - package-ecosystem: 'docker'
+    directories:
+      - '/container/powershell'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 1
+    open-pull-requests-limit: 999
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
@@ -37,6 +45,15 @@ updates:
         patterns:
           - 'actions/checkout'
           - 'actions/setup-*'
+  - package-ecosystem: 'cargo'
+    directories:
+      - '/container/powershell/host'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 1
+      semver-major-days: 30
+    open-pull-requests-limit: 999
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:

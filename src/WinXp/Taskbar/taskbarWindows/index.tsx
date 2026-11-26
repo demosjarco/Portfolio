@@ -43,7 +43,8 @@ export default component$(() => {
 	});
 
 	const focused = focusedAppId(wm);
-	const apps = wm.apps;
+	// Dialogs (Run, message boxes) never get a taskbar button on XP.
+	const apps = wm.apps.filter((app) => !appRegistry[app.appKey].dialog);
 
 	// Capacity = how many ungrouped buttons fit before titles truncate too much.
 	const capacity = Math.max(1, Math.floor(containerWidth.value / MIN_BUTTON_WIDTH));

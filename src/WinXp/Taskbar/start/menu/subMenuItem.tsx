@@ -1,7 +1,7 @@
-import { component$, Slot, type ClassList } from '@builder.io/qwik';
+import { component$, Slot, type ClassList, type QRL } from '@builder.io/qwik';
 import Folder from '~/assets/windowsIcons/shell32_37-6.png?w=16&h=16&jsx';
 
-export default component$<{ folder?: boolean; name: string; href?: string }>(({ folder = false, ...props }) => {
+export default component$<{ folder?: boolean; name: string; href?: string; onClick$?: QRL<() => void> }>(({ folder = false, ...props }) => {
 	const rootClasses: ClassList = 'block h-6 w-full cursor-default px-2 py-1 pr-4 text-xs font-light';
 	const rootContent = (
 		<span class="my-auto flex">
@@ -25,7 +25,9 @@ export default component$<{ folder?: boolean; name: string; href?: string }>(({ 
 					{rootContent}
 				</a>
 			) : (
-				<button class={rootClasses}>{rootContent}</button>
+				<button class={rootClasses} onClick$={props.onClick$}>
+					{rootContent}
+				</button>
 			)}
 			<Slot name="submenu" />
 		</li>

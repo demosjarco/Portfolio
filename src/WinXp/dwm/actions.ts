@@ -33,7 +33,7 @@ export function focusedAppId(state: WindowManagerState): number {
  *   chatroom).
  * - Otherwise, single-instance apps refocus their lone existing window.
  */
-export function launchApp(state: WindowManagerState, appKey: AppKey, opts?: { instanceKey?: string; data?: AppInstance['data']; title?: string }): void {
+export function launchApp(state: WindowManagerState, appKey: AppKey, opts?: { instanceKey?: string; data?: AppInstance['data']; title?: string; position?: { x: number; y: number } }): void {
 	const entry = appRegistry[appKey];
 
 	const existing = opts?.instanceKey !== undefined ? state.apps.find((a) => a.appKey === appKey && a.instanceKey === opts.instanceKey) : entry.singleInstance ? state.apps.find((a) => a.appKey === appKey) : undefined;
@@ -51,12 +51,12 @@ export function launchApp(state: WindowManagerState, appKey: AppKey, opts?: { in
 		zIndex: state.nextZIndex,
 		minimized: false,
 		maximized: false,
-		x: 80 + offset,
-		y: 60 + offset,
+		x: opts?.position?.x ?? 80 + offset,
+		y: opts?.position?.y ?? 60 + offset,
 		width: entry.defaultSize.width,
 		height: entry.defaultSize.height,
 		instanceKey: opts?.instanceKey,
-		data: opts?.data,
+		data: opts?.data ?? entry.newWindowData?.(),
 	};
 
 	state.apps = [...state.apps, win];

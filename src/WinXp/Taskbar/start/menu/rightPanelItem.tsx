@@ -1,9 +1,9 @@
-import { component$, Slot } from '@builder.io/qwik';
+import { component$, Slot, type QRL } from '@builder.io/qwik';
 
-export default component$<{ name: string; bold?: boolean }>(({ bold = false, ...props }) => {
+export default component$<{ name: string; bold?: boolean; onClick$?: QRL<() => void> }>(({ bold = false, ...props }) => {
 	return (
 		<li class="w-full cursor-default p-px text-[#00136b] hover:bg-[#2f71cd] hover:text-white">
-			<button class="flex h-7 w-full cursor-default items-center">
+			<button class="flex h-7 w-full cursor-default items-center" onClick$={props.onClick$}>
 				<div class="mx-1 h-6 w-6 shrink-0">
 					<Slot />
 				</div>

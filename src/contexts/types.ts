@@ -60,6 +60,14 @@ export enum AppKey {
 	Messenger = 'Messenger',
 	/** A single open chatroom conversation (one window per room). */
 	MessengerRoom = 'MessengerRoom',
+	/** Windows PowerShell console (any number of windows, all sharing one sandbox). */
+	PowerShell = 'PowerShell',
+	/** Command Prompt. Faked: it shows cmd.exe running `powershell`, then it is the same sandboxed PowerShell. */
+	CommandPrompt = 'CommandPrompt',
+	/** Start → Run… dialog. */
+	Run = 'Run',
+	/** The "Windows cannot find '…'" message box shown when Run doesn't recognize a name. */
+	RunError = 'RunError',
 }
 
 /**
@@ -96,7 +104,30 @@ export interface AppInstance {
 	 */
 	instanceKey?: string;
 	/** App-specific serializable payload handed to the window body. */
-	data?: { roomId: string; roomName: string };
+	data?: MessengerRoomData | PowerShellWindowData | RunData | RunErrorData;
+}
+
+/** Window payload of a Messenger conversation. */
+export interface MessengerRoomData {
+	roomId: string;
+	roomName: string;
+}
+
+/** Window payload of a PowerShell console: the UUIDv7 that names its session in the sandbox. */
+export interface PowerShellWindowData {
+	windowId: string;
+	/** Started from Start → Run rather than the Start menu shortcut, so it gets the console's default look (gray on black) instead of the shortcut's blue. */
+	consoleDefaults?: boolean;
+}
+
+/** Window payload of the Run dialog: text to start with (XP reopens Run with what you typed after a "cannot find" error). */
+export interface RunData {
+	text: string;
+}
+
+/** Window payload of the Run error box: the name Run couldn't find. */
+export interface RunErrorData {
+	missing: string;
 }
 
 /**

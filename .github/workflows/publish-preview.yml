@@ -8,7 +8,9 @@ on:
     paths:
       - '.github/workflows/publish-preview.yml'
       - 'adapters/**'
+      - 'container/**'
       - 'db/**'
+      - 'do/**'
       - 'public/**'
       - 'src/**'
       - 'wf/**'

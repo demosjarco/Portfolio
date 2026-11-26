@@ -5,6 +5,7 @@ import MseIcon from '~/assets/windowsIcons/Microsoft_Security_Essentials_icon.pn
 import ProgramDefaults from '~/assets/windowsIcons/moricons_1_114-8.png?w=24&h=24&jsx';
 import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-6.png?w=32&h=32&jsx';
 import MessengerIcon from '~/assets/windowsIcons/msmsgs_1_1-6.png?w=32&h=32&jsx';
+import PowerShellIcon from '~/assets/windowsIcons/33017-256x256x32.png?w=32&h=32&jsx';
 import ControlPanel from '~/assets/windowsIcons/shell32_1_137-2.png?w=24&h=24&jsx';
 import PrintersAndFaxes from '~/assets/windowsIcons/shell32_1_138-5.png?w=24&h=24&jsx';
 import Search from '~/assets/windowsIcons/shell32_1_23-8.png?w=24&h=24&jsx';
@@ -18,6 +19,7 @@ import Run from '~/assets/windowsIcons/shell32_2_25-7.png?w=24&h=24&jsx';
 import MyRecentDocuments from '~/assets/windowsIcons/shell32_327-6.png?w=24&h=24&jsx';
 import { WindowManagerContext } from '~/contexts';
 import { AppKey } from '~/contexts/types';
+import { openRun } from '~/WinXp/apps/Run/run';
 import { launchApp } from '~/WinXp/dwm/actions';
 import AllPrograms from './allPrograms';
 import Item from './item';
@@ -73,6 +75,9 @@ export default component$(() => {
 						<Item name="Windows Messenger" onClick$={$(() => launchApp(wm, AppKey.Messenger))}>
 							<MessengerIcon class="h-8 w-8" />
 						</Item>
+						<Item name="Windows PowerShell" onClick$={$(() => launchApp(wm, AppKey.PowerShell))}>
+							<PowerShellIcon class="h-8 w-8" />
+						</Item>
 						<li class="grow"></li>
 						<Separator />
 						<AllPrograms />
@@ -112,7 +117,7 @@ export default component$(() => {
 						<RightPanelItem name="Search">
 							<Search />
 						</RightPanelItem>
-						<RightPanelItem name="Run...">
+						<RightPanelItem name="Run..." onClick$={$(() => openRun(wm))}>
 							<Run />
 						</RightPanelItem>
 					</ul>

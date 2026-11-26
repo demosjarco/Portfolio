@@ -1,4 +1,5 @@
-import { component$ } from '@builder.io/qwik';
+import { $, component$, useContext } from '@builder.io/qwik';
+import { v7 as uuidv7 } from 'uuid';
 import AccessibilityWizard from '~/assets/windowsIcons/accwiz_1_101-1.png?w=16&h=16&jsx';
 import ProgramCompatibility from '~/assets/windowsIcons/ahui_1_2006-2.png?w=16&h=16&jsx';
 import SetProgramAccess from '~/assets/windowsIcons/appwiz_1_1500-2.png?w=16&h=16&jsx';
@@ -24,6 +25,7 @@ import OutlookExpress from '~/assets/windowsIcons/msimn_1_2-6.png?w=16&h=16&jsx'
 import SystemInformation from '~/assets/windowsIcons/msinfo32_1_128-1.png?w=16&h=16&jsx';
 import WindowsMessenger from '~/assets/windowsIcons/msmsgs_1_1-6.png?w=16&h=16&jsx';
 import Paint from '~/assets/windowsIcons/mspaint_1_1100.png?w=16&h=16&jsx';
+import PowerShell from '~/assets/windowsIcons/33017-256x256x32.png?w=16&h=16&jsx';
 import ScheduledTasks from '~/assets/windowsIcons/mstask_1_100-2.png?w=16&h=16&jsx';
 import RemoteDesktop from '~/assets/windowsIcons/mstsc_1_101-2.png?w=16&h=16&jsx';
 import Narrator from '~/assets/windowsIcons/narrator_1_102-1.png?w=16&h=16&jsx';
@@ -51,11 +53,16 @@ import WordPad from '~/assets/windowsIcons/wordpad_1_128-1.png?w=16&h=16&jsx';
 import SecurityCenter from '~/assets/windowsIcons/wscui_1_200-2.png?w=16&h=16&jsx';
 import WindowsUpdate from '~/assets/windowsIcons/wupdmgr_1_APPICON-2.png?w=16&h=16&jsx';
 import WirelessNetworkSetup from '~/assets/windowsIcons/xpsp1res_1_100-2.png?w=16&h=16&jsx';
+import { WindowManagerContext } from '~/contexts';
+import { AppKey } from '~/contexts/types';
+import { launchApp } from '~/WinXp/dwm/actions';
 import Separator from './separator';
 import SubMenu from './subMenu';
 import SubMenuItem from './subMenuItem';
 
 export default component$(() => {
+	const wm = useContext(WindowManagerContext);
+
 	return (
 		<li class="w-full p-1 text-black hover:bg-[#2f71cd] hover:text-white">
 			<div class="flex">
@@ -210,11 +217,18 @@ export default component$(() => {
 								<SystemRestore q:slot="icon" />
 							</SubMenuItem>
 						</SubMenu>
+						<SubMenu>
+							<SubMenuItem q:slot="root" folder={true} name="Windows PowerShell" />
+							{/* Every launch is a new console window with its own PowerShell process. */}
+							<SubMenuItem name="Windows PowerShell" onClick$={$(() => launchApp(wm, AppKey.PowerShell, { data: { windowId: uuidv7() } }))}>
+								<PowerShell q:slot="icon" />
+							</SubMenuItem>
+						</SubMenu>
 						<Separator />
 						<SubMenuItem name="Address Book">
 							<AddressBook q:slot="icon" />
 						</SubMenuItem>
-						<SubMenuItem name="Command Prompt">
+						<SubMenuItem name="Command Prompt" onClick$={$(() => launchApp(wm, AppKey.CommandPrompt, { data: { windowId: uuidv7() } }))}>
 							<CommandPrompt q:slot="icon" />
 						</SubMenuItem>
 						<SubMenuItem name="Notepad">

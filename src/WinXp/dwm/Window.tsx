@@ -134,10 +134,18 @@ export const Window = component$<WindowProps>(({ app, isFocus, onFocus$, onMinim
 				<Icon class="mr-1 ml-0.5 h-4 w-4" />
 				<span class="flex-1 truncate text-[12px] font-bold tracking-wide">{app.title}</span>
 				<div class="flex items-center gap-[2px]">
-					<button type="button" title="Minimize" class="h-[21px] w-[21px] rounded-[3px] border border-white/60 bg-[#3c81f3] text-black hover:brightness-110" onPointerdown$={$((e: PointerEvent) => e.stopPropagation())} onClick$={$(() => onMinimize$(app.id))}>
-						<span class="relative -top-1 inline-block">_</span>
-					</button>
-					{entry.resizable && (
+					{/* Dialogs (Run, message boxes) have no minimize/maximize; some have a help button instead. */}
+					{entry.dialog?.help && (
+						<button type="button" title="Help" class="h-[21px] w-[21px] rounded-[3px] border border-white/60 bg-[#3c81f3] text-[12px] font-bold text-white hover:brightness-110" onPointerdown$={$((e: PointerEvent) => e.stopPropagation())}>
+							?
+						</button>
+					)}
+					{!entry.dialog && (
+						<button type="button" title="Minimize" class="h-[21px] w-[21px] rounded-[3px] border border-white/60 bg-[#3c81f3] text-black hover:brightness-110" onPointerdown$={$((e: PointerEvent) => e.stopPropagation())} onClick$={$(() => onMinimize$(app.id))}>
+							<span class="relative -top-1 inline-block">_</span>
+						</button>
+					)}
+					{!entry.dialog && entry.resizable && (
 						<button type="button" title={maximized ? 'Restore' : 'Maximize'} class="h-[21px] w-[21px] rounded-[3px] border border-white/60 bg-[#3c81f3] text-[10px] text-white hover:brightness-110" onPointerdown$={$((e: PointerEvent) => e.stopPropagation())} onClick$={$(() => onToggleMaximize$(app.id))}>
 							{maximized ? '❐' : '☐'}
 						</button>

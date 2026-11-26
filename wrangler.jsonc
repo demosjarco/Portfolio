@@ -38,11 +38,40 @@
 			{
 				"name": "CHATROOM",
 				"class_name": "Chatroom"
+			},
+			{
+				"name": "POWERSHELL",
+				"class_name": "PowerShellSandbox"
 			}
 		]
 	},
+	// Worker Previews do not support Durable Object-managed containers, so this is intentionally not redeclared under "previews" and the PowerShell API answers 503 there.
+	"containers": [
+		{
+			"class_name": "PowerShellSandbox",
+			"scheduling_policy": "durable_object",
+			"images": {
+				"powershell": {
+					"dockerfile": "./container/powershell/Dockerfile",
+					"build_context": "./container/powershell"
+				}
+			}
+		}
+	],
+	"ratelimits": [
+		{
+			"name": "POWERSHELL_LIMITER",
+			"namespace_id": "2001",
+			"simple": { "limit": 1, "period": 60 }
+		}
+	],
 	"exports": {
 		"Chatroom": {
+			"type": "durable-object",
+			"state": "created",
+			"storage": "sqlite"
+		},
+		"PowerShellSandbox": {
 			"type": "durable-object",
 			"state": "created",
 			"storage": "sqlite"

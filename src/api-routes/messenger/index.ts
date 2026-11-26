@@ -2,35 +2,11 @@ import { zValidator } from '@hono/zod-validator';
 import { and, desc, eq, like, lt, sql } from 'drizzle-orm/sql';
 import { Hono } from 'hono';
 import * as z4 from 'zod/v4';
-import type { ContextVariables, EnvVars, TurnstileRequest, TurnstileResponse } from '~/types';
+import type { ContextVariables, EnvVars } from '~/types';
+import { verifyTurnstile } from '~/utils/turnstile';
 import * as schema from '~db/index.js';
 
 const app = new Hono<{ Bindings: EnvVars; Variables: ContextVariables }>();
-
-/**
- * Validate a Turnstile token against Cloudflare's siteverify endpoint.
- * Returns `true` only when the challenge solved successfully.
- */
-async function verifyTurnstile(token: string, secret: string, remoteip?: string): Promise<boolean> {
-	try {
-		const res = await fetch(new URL('https://challenges.cloudflare.com/turnstile/v0/siteverify'), {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				secret,
-				response: token,
-				remoteip,
-			} satisfies TurnstileRequest),
-		});
-		if (!res.ok) return false;
-		const outcome = await res.json<TurnstileResponse>();
-		return outcome.success;
-	} catch {
-		return false;
-	}
-}
 
 /** List chatrooms (optionally filtered by name), newest first, cursor-paged. */
 app.get(
@@ -156,7 +132,7 @@ app.get(
 			id: z4.hex().length(64),
 		}),
 	),
-	(c) => {
+	async (c) => {
 		if (c.req.header('Upgrade')?.toLowerCase() !== 'websocket') return c.text('Expected websocket', 426);
 
 		const hexId = c.req.param('id');
@@ -167,7 +143,9 @@ app.get(
 			return c.text('Invalid room id', 400);
 		}
 
-		return stub.fetch(c.req.raw);
+		const upgrade = await stub.fetch(c.req.raw);
+		// Responses from a stub have immutable headers, and the global timing() middleware appends Server-Timing to every response.
+		return new Response(null, { status: upgrade.status, statusText: upgrade.statusText, headers: new Headers(upgrade.headers), webSocket: upgrade.webSocket });
 	},
 );
 
