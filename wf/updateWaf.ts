@@ -1,6 +1,6 @@
 import { cacheExchange, Client, fetchExchange } from '@urql/core';
-import { Cloudflare } from 'cloudflare';
-import type { RulesetGetResponse } from 'cloudflare/resources/rulesets/rulesets.mjs';
+import { BaseRulesets, type RulesetGetResponse } from 'cloudflare/resources/rulesets/rulesets';
+import { createClient } from 'cloudflare/tree-shakable';
 import { WorkflowEntrypoint, type WorkflowEvent, type WorkflowStep } from 'cloudflare:workers';
 import { NonRetryableError } from 'cloudflare:workflows';
 import { drizzle } from 'drizzle-orm/d1';
@@ -140,7 +140,8 @@ export class UpdateWaf extends WorkflowEntrypoint<EnvVars, zm.input<typeof updat
 
 		// Get ruleset data from CF
 		const uniqueRulesets = new Set(events.map((event) => event.rulesetId).filter((id) => id.trim() !== ''));
-		const cf = new Cloudflare({
+		const cf = createClient({
+			resources: [BaseRulesets],
 			apiToken: this.env.CF_API_TOKEN,
 			// Allow workflow step native retry
 			maxRetries: 0,
