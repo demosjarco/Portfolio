@@ -1,0 +1,20 @@
+FROM rust:1.99.0-bookworm@sha256:114c7a4425406451c2866b6aafe69fe29b1b298832db1277d411ac73c82d04d6 AS host
+WORKDIR /src
+COPY host/ ./
+RUN --mount=type=cache,target=/usr/local/cargo/registry --mount=type=cache,target=/usr/local/cargo/git --mount=type=cache,target=/src/target cargo build --release --locked
+RUN cp target/release/pwsh-host /usr/local/bin/pwsh-host
+
+FROM mcr.microsoft.com/powershell:7.4-debian-bookworm@sha256:206a748b34deec1b64553fcfa92294fc871c2df5855e9f340df172756bef201f
+RUN --mount=type=cache,target=/var/cache/ apt update
+RUN --mount=type=cache,target=/var/cache/ apt install -y --no-install-recommends tmux
+RUN --mount=type=cache,target=/var/cache/ apt clean
+COPY --from=host /usr/local/bin/pwsh-host /usr/local/bin/pwsh-host
+COPY rootfs/ /
+# The base image sets LC_ALL=en_US.UTF-8 without generating that locale; C.UTF-8 ships with Debian and keeps tmux and pwsh in UTF-8.
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV TERM=xterm-256color
+ENV POWERSHELL_TELEMETRY_OPTOUT=1
+ENV POWERSHELL_UPDATECHECK=Off
+WORKDIR /root
+CMD ["/usr/local/bin/pwsh-host"]
