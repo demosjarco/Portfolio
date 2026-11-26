@@ -4,7 +4,7 @@ COPY host/ ./
 RUN --mount=type=cache,target=/usr/local/cargo/registry --mount=type=cache,target=/usr/local/cargo/git --mount=type=cache,target=/src/target cargo build --release --locked
 RUN cp target/release/pwsh-host /usr/local/bin/pwsh-host
 
-FROM mcr.microsoft.com/powershell:7.4-debian-bookworm@sha256:206a748b34deec1b64553fcfa92294fc871c2df5855e9f340df172756bef201f
+FROM mcr.microsoft.com/powershell:7.5-debian-bookworm@sha256:7ab5bd5ca6f95a3351fa0c6a1205237d57048c94542355aab55519a0861a9b25
 RUN --mount=type=cache,target=/var/cache/ apt update
 RUN --mount=type=cache,target=/var/cache/ apt install -y --no-install-recommends tmux
 RUN --mount=type=cache,target=/var/cache/ apt clean
