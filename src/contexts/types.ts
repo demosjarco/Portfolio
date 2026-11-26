@@ -119,5 +119,8 @@ export interface IconState {
 	id: number;
 	appKey: AppKey;
 	title: string;
-	isFocus: boolean;
+	/** Part of the current (possibly multi-item) selection. */
+	isSelected: boolean;
+	/** The listview's focus/caret item. Only one icon has it at a time. */
+	isFocused: boolean;
 }
