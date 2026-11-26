@@ -2,6 +2,7 @@ import { qwikCity } from '@builder.io/qwik-city/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import tailwindcss from '@tailwindcss/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -9,7 +10,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 const cloudflareNodeRuntimes: `node:${string}`[] = ['node:assert', 'node:async_hooks', 'node:buffer', 'node:crypto', 'node:diagnostics_channel', 'node:dns', 'node:events', 'node:net', 'node:path', 'node:process', 'node:stream', 'node:string_decoder', 'node:test', 'node:timers', 'node:url', 'node:util', 'node:zlib'];
 const cloudflareRuntimes: `cloudflare:${string}`[] = ['cloudflare:email', 'cloudflare:workers', 'cloudflare:sockets'];
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
 	return {
 		plugins: [
 			tailwindcss(),
@@ -20,6 +21,12 @@ export default defineConfig(() => {
 				browser: true,
 				modulesOnly: true,
 				preferBuiltins: true,
+			}),
+			visualizer({
+				filename: 'tmp/stats.html',
+				template: 'sunburst',
+				// To match wrangler uploaded format
+				gzipSize: true,
 			}),
 		],
 		server: {
@@ -36,7 +43,7 @@ export default defineConfig(() => {
 		},
 		build: {
 			target: 'esnext',
-			sourcemap: true,
+			sourcemap: command === 'serve',
 			emptyOutDir: true,
 			rollupOptions: {
 				external: [...cloudflareNodeRuntimes, ...cloudflareRuntimes],

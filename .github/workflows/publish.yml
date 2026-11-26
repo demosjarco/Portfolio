@@ -80,6 +80,9 @@ jobs:
           key: tsc-${{ github.head_ref || github.ref_name }}-${{ hashFiles('**/*.tsbuildinfo') }}
           enableCrossOsArchive: true
         background: true
+      - run: npm run lint
+        id: lint
+        background: true
       - name: Restore client cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -98,7 +101,6 @@ jobs:
             dist/**
           key: qwik-${{ github.head_ref || github.ref_name }}-c-${{ hashFiles('src/**', '**/*.tsbuildinfo', '**/package-lock.json') }}
           enableCrossOsArchive: true
-        background: true
       - run: npm run build.server
         env:
           GIT_HASH: ${{ github.sha }}
@@ -111,7 +113,7 @@ jobs:
           key: qwik-${{ github.head_ref || github.ref_name }}-s-${{ hashFiles('src/**', '**/*.tsbuildinfo', '**/package-lock.json') }}
           enableCrossOsArchive: true
         background: true
-      - run: npm run lint
+      - wait: lint
       - run: echo "wrangler_version=$(npm ls wrangler --depth=0 --json | jq -r '.dependencies.wrangler.version')" >> $GITHUB_OUTPUT
         id: npm_wrangler_version
       - uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0

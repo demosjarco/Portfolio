@@ -1,5 +1,5 @@
 import { component$, noSerialize, Slot, useSignal, useVisibleTask$, type NoSerialize } from '@builder.io/qwik';
-import { Dropdown } from 'flowbite';
+import Dropdown from 'flowbite/lib/esm/components/dropdown';
 import SubMenuItem from './subMenuItem';
 
 export default component$<{ empty?: boolean }>(({ empty = false, ...props }) => {

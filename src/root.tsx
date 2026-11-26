@@ -1,6 +1,6 @@
 import { component$, useComputed$, useServerData, useVisibleTask$ } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister, useLocation } from '@builder.io/qwik-city';
-import { initFlowbite } from 'flowbite';
+import { initDropdowns } from 'flowbite/lib/esm/components/dropdown';
 import { RouterHead } from '~/components/router-head/router-head';
 
 import './global.css';
@@ -9,7 +9,7 @@ export default component$(() => {
 	const nonce = useServerData<string | undefined>('nonce');
 
 	useVisibleTask$(() => {
-		initFlowbite();
+		initDropdowns();
 	});
 
 	return (
